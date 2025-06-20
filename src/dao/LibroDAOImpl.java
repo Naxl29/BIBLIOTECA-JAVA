@@ -15,11 +15,12 @@ public class LibroDAOImpl implements LibroDAO {
 
     
     public void crearLibro(Libro libro) {
-        String sql = "INSERT INTO libros (titulo, autor, editorial) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO libros (titulo, autor, editorial, id_genero) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, libro.getTitulo());
             stmt.setString(2, libro.getAutor());
             stmt.setString(3, libro.getEditorial());
+            stmt.setInt(4, libro.getIdGenero());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -36,7 +37,8 @@ public class LibroDAOImpl implements LibroDAO {
                     rs.getInt("id"),
                     rs.getString("titulo"),
                     rs.getString("autor"),
-                    rs.getString("editorial")
+                    rs.getString("editorial"),
+                    rs.getInt("id_genero")
                 ));
             }
         } catch (SQLException e) {
@@ -47,12 +49,13 @@ public class LibroDAOImpl implements LibroDAO {
     }
 
     public void actualizarLibro(Libro libro) {
-        String sql = "UPDATE libros SET titulo = ?, autor = ?, editorial = ? WHERE id = ?";
+        String sql = "UPDATE libros SET titulo = ?, autor = ?, editorial = ?, id_genero = ? WHERE id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, libro.getTitulo());
             stmt.setString(2, libro.getAutor());
             stmt.setString(3, libro.getEditorial());
-            stmt.setInt(4, libro.getId());
+            stmt.setInt(4, libro.getIdGenero());
+            stmt.setInt(5, libro.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

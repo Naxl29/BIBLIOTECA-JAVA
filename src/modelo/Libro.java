@@ -5,12 +5,14 @@ public class Libro {
 	private String titulo;
 	private String autor;
 	private String editorial;
+	private int id_genero;
 	
-	public Libro(int id, String titulo, String autor, String editorial) {
+	public Libro(int id, String titulo, String autor, String editorial, int id_genero) {
 		this.id = id;
 		this.titulo = titulo;
 		this.autor = autor;
 		this.editorial = editorial;
+		this.id_genero = id_genero;
 	}
 	
 	public int getId() {
@@ -45,9 +47,17 @@ public class Libro {
 		this.editorial = editorial;
 	}
 	
+	public int getIdGenero() {
+		return id_genero;
+	}
+	
+	public void setIdGenero(int id_genero) {
+		this.id_genero = id_genero;
+	}
+	
 	@Override
 	public String toString() {
-		return "Libro [id=" + id + ", titulo=" + titulo + ", autor=" + autor + ", editorial=" + editorial + "]";
+		return "Libro [id=" + id + ", titulo=" + titulo + ", autor=" + autor + ", editorial=" + editorial + ", genero=" + id_genero + "]";
 	}
 	
 }
