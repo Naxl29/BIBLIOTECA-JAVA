@@ -13,7 +13,7 @@ public class LibroDAOImpl implements LibroDAO {
         this.con = DBConnection.conectar();
     }
 
-    
+    @Override
     public void crearLibro(Libro libro) {
         String sql = "INSERT INTO libros (titulo, autor, editorial, id_genero) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -27,6 +27,7 @@ public class LibroDAOImpl implements LibroDAO {
         }
     }
 
+    @Override
     public List<Libro> verTodosLosLibros() {
         List<Libro> libros = new ArrayList<>();
         String sql = "SELECT * FROM libros";
@@ -48,6 +49,7 @@ public class LibroDAOImpl implements LibroDAO {
         return libros;
     }
 
+    @Override
     public void actualizarLibro(Libro libro) {
         String sql = "UPDATE libros SET titulo = ?, autor = ?, editorial = ?, id_genero = ? WHERE id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -62,6 +64,7 @@ public class LibroDAOImpl implements LibroDAO {
         }
     }
 
+    @Override
     public void eliminarLibro(int id) {
         String sql = "DELETE FROM libros WHERE id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
