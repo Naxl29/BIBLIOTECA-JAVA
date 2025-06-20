@@ -1,4 +1,4 @@
-p/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
@@ -10,12 +10,30 @@ p/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 CREATE DATABASE IF NOT EXISTS `biblioteca_java` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `biblioteca_java`;
 
+CREATE TABLE IF NOT EXISTS `generos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `genero` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `generos` (`id`, `genero`) VALUES
+	(1, 'CIENCIA FICCIÓN'),
+	(2, 'TERROR'),
+	(3, 'AVENTURA'),
+	(4, 'COMEDIA'),
+	(5, 'ROMANCE'),
+	(6, 'DRAMA'),
+	(7, 'DISTOPÍA');
+
 CREATE TABLE IF NOT EXISTS `libros` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `titulo` varchar(100) DEFAULT NULL,
-  `autor` varchar(100) DEFAULT NULL,
-  `editorial` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `titulo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `autor` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `editorial` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `id_genero` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_genero` (`id_genero`),
+  CONSTRAINT `id_genero` FOREIGN KEY (`id_genero`) REFERENCES `generos` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
