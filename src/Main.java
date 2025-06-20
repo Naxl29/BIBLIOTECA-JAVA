@@ -8,7 +8,7 @@ public class Main {
         LibroDAO dao = new LibroDAOImpl();
 
         // Crear libro
-        Libro libroNuevo = new Libro(0, "Cien Años de Soledad", "Gabriel García Márquez", "Sudamericana");
+        Libro libroNuevo = new Libro(0, "NUM", "NUM", "NUM", 1);
         dao.crearLibro(libroNuevo);
 
         // Leer todos los libros
@@ -18,11 +18,11 @@ public class Main {
             System.out.println(libro);
         }
 
-        // Actualizar libro (ejemplo con ID 1)
-        Libro libroActualizar = new Libro(1, "Cien Años de Soledad (Editado)", "Gabo", "Sudamericana");
+        // Actualizar libro
+        Libro libroActualizar = new Libro(1, "NA", "NA", "NA", 1);
         dao.actualizarLibro(libroActualizar);
 
         // Eliminar libro por ID
-        dao.eliminarLibro(1); // Elimina libro con id 1 (ajusta según tu tabla)
+        dao.eliminarLibro(1); 
     }
 }
