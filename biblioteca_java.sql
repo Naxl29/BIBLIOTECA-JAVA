@@ -10,6 +10,16 @@
 CREATE DATABASE IF NOT EXISTS `biblioteca_java` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `biblioteca_java`;
 
+CREATE TABLE IF NOT EXISTS `estados` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `estado` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `estados` (`id`, `estado`) VALUES
+	(1, 'PRESTADO'),
+	(2, 'DEVUELTO');
+
 CREATE TABLE IF NOT EXISTS `generos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `genero` varchar(50) NOT NULL,
@@ -34,6 +44,39 @@ CREATE TABLE IF NOT EXISTS `libros` (
   PRIMARY KEY (`id`),
   KEY `id_genero` (`id_genero`),
   CONSTRAINT `id_genero` FOREIGN KEY (`id_genero`) REFERENCES `generos` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `libros` (`id`, `titulo`, `autor`, `editorial`, `id_genero`) VALUES
+	(2, 'NUM', 'NUM', 'NUM', 1),
+	(3, 'NYM', 'NYM', 'NYM', 1);
+
+CREATE TABLE IF NOT EXISTS `personas` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `primer_nombre` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `segundo_nombre` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `primer_apellido` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `segundo_apellido` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `documento` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `Documento` (`documento`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `personas` (`id`, `primer_nombre`, `segundo_nombre`, `primer_apellido`, `segundo_apellido`, `documento`) VALUES
+	(12, 'NICOLAS', 'ANTONIO', 'ARRIETA', 'LAGOS', '1099735735'),
+	(13, 'HAROL', 'SANTIAGO', 'RODRIGUEZ', 'CASALLAS', '111111');
+
+CREATE TABLE IF NOT EXISTS `prestamos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_persona` int NOT NULL,
+  `id_libro` int NOT NULL,
+  `id_estado` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_persona` (`id_persona`),
+  KEY `id_libro` (`id_libro`),
+  KEY `id_estado` (`id_estado`),
+  CONSTRAINT `id_estado` FOREIGN KEY (`id_estado`) REFERENCES `estados` (`id`),
+  CONSTRAINT `id_libro` FOREIGN KEY (`id_libro`) REFERENCES `libros` (`id`),
+  CONSTRAINT `id_persona` FOREIGN KEY (`id_persona`) REFERENCES `personas` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
