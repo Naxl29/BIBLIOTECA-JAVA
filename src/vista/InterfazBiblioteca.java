@@ -7,12 +7,17 @@ import dao.LibroDAO;
 import dao.LibroDAOImpl;
 import modelo.Libro;
 
+import modelo.Persona;
+import dao.PersonaDAO;
+import dao.PersonaDAOImpl;
+
 import java.awt.*;
 import java.util.List;
 
 @SuppressWarnings("serial")
 public class InterfazBiblioteca extends JFrame {
 	private LibroDAO dao;
+	private PersonaDAO personaDAO;
     private JTable tabla;
     private DefaultTableModel modeloTabla;
 
