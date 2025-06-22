@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface PersonaDAO {
 	void crearPersona(Persona persona);
-	List<Persona> obtenerTodasLasPersonas();
+	List<Persona> verTodasLasPersonas();
 	void actualizarPersona(Persona persona);
 	void eliminarPersona(int id);
 }

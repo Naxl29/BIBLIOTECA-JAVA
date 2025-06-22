@@ -16,81 +16,117 @@ import java.util.List;
 
 @SuppressWarnings("serial")
 public class InterfazBiblioteca extends JFrame {
-	private LibroDAO dao;
+	private LibroDAO libroDAO;
 	private PersonaDAO personaDAO;
-    private JTable tabla;
-    private DefaultTableModel modeloTabla;
+	
+    private JTable tablaLibros;
+    private DefaultTableModel modeloTablaLibros;
+    
+    private JTable tablaPersonas;
+    private DefaultTableModel modeloTablaPersonas;
 
     private JTextField txtTitulo, txtAutor, txtEditorial, txtGenero, txtIdEliminar;
     
     public InterfazBiblioteca() {
-    	dao = new LibroDAOImpl();
+    	libroDAO= new LibroDAOImpl();
     	personaDAO = new PersonaDAOImpl();
   
     	setTitle("Bibioteca: LA MONDA");
-    	setSize(800, 500);
+    	setSize(900, 600);
     	setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        setLayout(new BorderLayout());
+        JTabbedPane tabbedPane = new JTabbedPane();
+        
+        // -- PANEL LIBROS --
+        JPanel panelTablaLibros = new JPanel(new BorderLayout());
     
-	    //the table en español la tabla
-	    modeloTabla = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género"}, 0);
-	    tabla = new JTable(modeloTabla);
+	    modeloTablaLibros = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género"}, 0);
+	    tablaLibros = new JTable(modeloTablaLibros);
 	    cargarLibros();
-	    add(new JScrollPane(tabla), BorderLayout.CENTER);
+	    panelTablaLibros.add(new JScrollPane(tablaLibros), BorderLayout.CENTER);
 	    
 	    
 	    //Panel donde se van agregar los libros
-	    JPanel panelAgregar = new JPanel(new GridLayout(6,2));
+	    JPanel panelAgregarLibros = new JPanel(new GridLayout(7,2));
 	    txtTitulo = new JTextField();
 	    txtAutor = new JTextField();
 	    txtEditorial = new JTextField();
 	    txtGenero = new JTextField();
 	    
-	    panelAgregar.add(new JLabel("Título:"));
-	    panelAgregar.add(txtTitulo);
-	    panelAgregar.add(new JLabel("Autor:"));
-	    panelAgregar.add(txtAutor);
-	    panelAgregar.add(new JLabel("Editorial:"));
-	    panelAgregar.add(txtEditorial);
-	    panelAgregar.add(new JLabel("Género:"));
-	    panelAgregar.add(txtGenero);
+	    panelAgregarLibros.add(new JLabel("Título:"));
+	    panelAgregarLibros.add(txtTitulo);
+	    panelAgregarLibros.add(new JLabel("Autor:"));
+	    panelAgregarLibros.add(txtAutor);
+	    panelAgregarLibros.add(new JLabel("Editorial:"));
+	    panelAgregarLibros.add(txtEditorial);
+	    panelAgregarLibros.add(new JLabel("Género:"));
+	    panelAgregarLibros.add(txtGenero);
 	    
-	    JButton btnAgregar = new JButton("Agregar Libro");
-	    btnAgregar.addActionListener(e -> agregarLibro());
-	    panelAgregar.add(btnAgregar);
+	    JButton btnAgregarLibro = new JButton("Agregar Libro");
+	    btnAgregarLibro.addActionListener(e -> agregarLibro());
+	    panelAgregarLibros.add(btnAgregarLibro);
 	    
 	    //El panel para eliminar
 	    txtIdEliminar = new JTextField();
 	    JButton btnEliminar = new JButton("Eliminar Libro");
-	    btnEliminar.addActionListener(e -> EliminarLibro());
+	    btnEliminar.addActionListener(e -> eliminarLibro());
 	    
+	    panelAgregarLibros.add(new JLabel("ID a eliminar:"));
+	    panelAgregarLibros.add(txtIdEliminar);
+	    panelAgregarLibros.add(btnEliminar);
+	    
+	    panelTablaLibros.add(panelAgregarLibros, BorderLayout.SOUTH);
+	    tabbedPane.addTab("Libros", panelTablaLibros);
+	    
+	    // -- PANEL PERSONAS --
+	    JPanel panelTablaPersonas = new JPanel(new BorderLayout());
+	    modeloTablaPersonas = new DefaultTableModel(new String[] {"ID", "Primer Nombre", "Segundo Nombre", "Primer Apellido", "Segundo Apellido", "Documento"}, 0);
+	    tablaPersonas = new JTable(modeloTablaPersonas);
+	    cargarPersonas();
+	    panelTablaPersonas.add(new JScrollPane(tablaPersonas), BorderLayout.CENTER);
+	    
+	    // Panel para agregar personas
 	    JButton btnAgregarPersona = new JButton("Agregar Persona");
 	    btnAgregarPersona.addActionListener(e -> {
 	    	PanelAgregarPersona dialogo = new PanelAgregarPersona(this, personaDAO);
 	    	dialogo.setVisible(true);
+	    	cargarPersonas();
 	    });
-	    panelAgregar.add(new JLabel());
-	    panelAgregar.add(btnAgregarPersona);
 	    
-	    panelAgregar.add(new JLabel("ID a eliminar:"));
-	    panelAgregar.add(txtIdEliminar);
-	    panelAgregar.add(btnEliminar);
-	
-	    add(panelAgregar, BorderLayout.SOUTH);
+	    JPanel panelAgregarPersona = new JPanel();
+	    panelAgregarPersona.add(btnAgregarPersona);
+	    panelTablaPersonas.add(panelAgregarPersona, BorderLayout.SOUTH);
+	    
+	    tabbedPane.addTab("Personas", panelTablaPersonas);
+	    add(tabbedPane);
     }
 	    
 	    private void cargarLibros() {
-	    	modeloTabla.setRowCount(0); // limpia la tabla
-	    	List<Libro> libros = dao.verTodosLosLibros();
+	    	modeloTablaLibros.setRowCount(0); 	
+	    	List<Libro> libros = libroDAO.verTodosLosLibros();
 	    	for (Libro libro : libros) {
-	    		modeloTabla.addRow(new Object[] {
+	    		modeloTablaLibros.addRow(new Object[] {
 	    				libro.getId(),
 	    				libro.getTitulo(),
 	    				libro.getAutor(),
 	    				libro.getEditorial(),
 	    				libro.getIdGenero()
+	    		});
+	    	}
+	    }
+	    
+	    private void cargarPersonas() {
+	    	modeloTablaPersonas.setRowCount(0); 
+	    	List<Persona> personas = personaDAO.verTodasLasPersonas();
+	    	for (Persona persona : personas) {
+	    		modeloTablaPersonas.addRow(new Object[] {
+	    				persona.getId(),
+	    				persona.getPrimerNombre(),
+	    				persona.getSegundoNombre(),
+	    				persona.getPrimerApellido(),
+	    				persona.getSegundoApellido(),
+	    				persona.getDocumento()
 	    		});
 	    	}
 	    }
@@ -103,7 +139,7 @@ public class InterfazBiblioteca extends JFrame {
 	            int genero = Integer.parseInt(txtGenero.getText());
 	            
 	            Libro libro = new Libro(0, titulo, autor, editorial, genero);
-	            dao.crearLibro(libro);
+	            libroDAO.crearLibro(libro);
 	            cargarLibros();
 	            limpiarCampos();
 	        } catch (Exception e) {
@@ -111,10 +147,10 @@ public class InterfazBiblioteca extends JFrame {
 	    	}
 	    }
 	    
-	    private void EliminarLibro() {
+	    private void eliminarLibro() {
 	    	try {
 	    		int id = Integer.parseInt(txtIdEliminar.getText());
-	            dao.eliminarLibro(id);
+	    		libroDAO.eliminarLibro(id);
 	            cargarLibros();
 	            txtIdEliminar.setText("");
 	        } catch (Exception e) {

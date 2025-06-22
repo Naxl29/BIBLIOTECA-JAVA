@@ -29,7 +29,7 @@ public class PersonaDAOImpl implements PersonaDAO {
 	}
 	
 	@Override
-	public List<Persona> obtenerTodasLasPersonas() {
+	public List<Persona> verTodasLasPersonas() {
 		List<Persona> personas = new ArrayList<>();
 		String sql = "SELECT * FROM personas";
 		try (PreparedStatement stmt = con.prepareStatement(sql)) {
