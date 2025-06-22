@@ -25,6 +25,7 @@ public class InterfazBiblioteca extends JFrame {
     
     public InterfazBiblioteca() {
     	dao = new LibroDAOImpl();
+    	personaDAO = new PersonaDAOImpl();
   
     	setTitle("Bibioteca: LA MONDA");
     	setSize(800, 500);
@@ -64,6 +65,14 @@ public class InterfazBiblioteca extends JFrame {
 	    txtIdEliminar = new JTextField();
 	    JButton btnEliminar = new JButton("Eliminar Libro");
 	    btnEliminar.addActionListener(e -> EliminarLibro());
+	    
+	    JButton btnAgregarPersona = new JButton("Agregar Persona");
+	    btnAgregarPersona.addActionListener(e -> {
+	    	PanelAgregarPersona dialogo = new PanelAgregarPersona(this, personaDAO);
+	    	dialogo.setVisible(true);
+	    });
+	    panelAgregar.add(new JLabel());
+	    panelAgregar.add(btnAgregarPersona);
 	    
 	    panelAgregar.add(new JLabel("ID a eliminar:"));
 	    panelAgregar.add(txtIdEliminar);

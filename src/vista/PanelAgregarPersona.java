@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import modelo.Persona;
 import dao.PersonaDAO;
 
+@SuppressWarnings("serial")
 public class PanelAgregarPersona extends JDialog implements ActionListener {
 
 	public final static String ACEPTAR = "Aceptar";
@@ -66,9 +67,36 @@ public class PanelAgregarPersona extends JDialog implements ActionListener {
 		btnCancelar.addActionListener(this);
 		panelFormulario.add(btnCancelar);
 		
-		@Override
-		public void actionPerfomed(ActionEvent e) {
-			String comando = e.getActionCommand();
+		add(panelFormulario, BorderLayout.CENTER);
+		setResizable(false);
+		
+	}
+		
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String comando = e.getActionCommand();
+		
+		if (comando.equals(ACEPTAR)) {
+			String primerNombre = txtPrimerNombre.getText().trim();
+			String segundoNombre = txtSegundoNombre.getText().trim();
+			String primerApellido = txtPrimerApellido.getText().trim();
+			String segundoApellido = txtSegundoApellido.getText().trim();
+			String documento = txtDocumento.getText().trim();
+			
+			if (primerNombre.isEmpty() || primerApellido.isEmpty() || documento.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "El primer nombre, primer apellido y número de documento son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			Persona nuevaPersona = new Persona(0, primerNombre, segundoNombre, primerApellido, segundoApellido, documento);
+			personaDAO.crearPersona(nuevaPersona);
+			
+			JOptionPane.showMessageDialog(this, "Persona agregada exitosamente.");
+			dispose();
+			
+		} else if (comando.equals(CANCELAR)) {
+			dispose();
 		}
 	}
 }
+
