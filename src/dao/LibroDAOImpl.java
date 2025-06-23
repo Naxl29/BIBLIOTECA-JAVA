@@ -48,6 +48,28 @@ public class LibroDAOImpl implements LibroDAO {
 
         return libros;
     }
+    
+    @Override
+    public Libro verLibroPorId(int id) {
+    	Libro libro = null;
+    	String sql = "SELECT * FROM libros WHERE id = ?";
+    	try (PreparedStatement stmt = con.prepareStatement(sql)) {
+    		stmt.setInt(1, id);
+    		ResultSet rs = stmt.executeQuery();
+    		if (rs.next()) {
+    			libro = new Libro(
+    				rs.getInt("id"),
+    				rs.getString("titulo"),
+    				rs.getString("autor"),
+    				rs.getString("editorial"),
+    				rs.getInt("id_genero")
+    			);
+    		}
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    	return libro;
+    }
 
     @Override
     public void actualizarLibro(Libro libro) {
