@@ -52,6 +52,29 @@ public class PersonaDAOImpl implements PersonaDAO {
 	}
 	
 	@Override
+	public Persona verPersonaPorId(int id) {
+		String sql = "SELECT * FROM personas WHERE id = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)){
+			stmt.setInt(1, id);
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					return new Persona(
+						rs.getInt("id"),
+						rs.getString("primer_nombre"),
+						rs.getString("segundo_nombre"),
+						rs.getString("primer_apellido"),
+						rs.getString("segundo_apellido"),
+						rs.getString("documento")
+					);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
 	public void actualizarPersona(Persona persona) {
 		String sql = "UPDATE personas SET primer_nombre = ?, segundo_nombre = ?, primer_apellido = ?, segundo_apellido = ?, documento = ? WHERE id = ?";
 		try (PreparedStatement stmt = con.prepareStatement(sql)) {

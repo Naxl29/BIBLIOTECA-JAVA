@@ -2,6 +2,9 @@ package vista;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 
 import dao.LibroDAO;
 import dao.LibroDAOImpl;
@@ -83,6 +86,28 @@ public class InterfazBiblioteca extends JFrame {
 	    JPanel panelTablaPersonas = new JPanel(new BorderLayout());
 	    modeloTablaPersonas = new DefaultTableModel(new String[] {"ID", "Primer Nombre", "Segundo Nombre", "Primer Apellido", "Segundo Apellido", "Documento"}, 0);
 	    tablaPersonas = new JTable(modeloTablaPersonas);
+	    
+	    // Panel para mostrar los detalles de la persona al hacer clic
+	    tablaPersonas.addMouseListener(new MouseAdapter() {
+	    	public void mouseClicked(java.awt.event.MouseEvent evt) {
+	    		int filaSeleccionada = tablaPersonas.getSelectedRow();
+	    		if (filaSeleccionada != -1) {
+	    			int idPersona = (int) modeloTablaPersonas.getValueAt(filaSeleccionada, 0);
+	    			Persona persona = personaDAO.verPersonaPorId(idPersona);
+	    			if (persona != null) {
+	    				JOptionPane.showMessageDialog(null, 
+	    						"ID: " + persona.getId() + "\n" +
+	    						"Nombre: " + persona.getPrimerNombre() + " " + persona.getSegundoNombre() + "\n" +
+	    						"Apellido: " + persona.getPrimerApellido() + " " + persona.getSegundoApellido() + "\n" +
+	    						"Documento: " + persona.getDocumento(),
+	    						"Detalles de la Persona", JOptionPane.INFORMATION_MESSAGE);
+	    			} else {
+	    				JOptionPane.showMessageDialog(panelTablaPersonas, "Persona no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
+	    			}
+	    		}
+	    	}
+	    });
+	    
 	    cargarPersonas();
 	    panelTablaPersonas.add(new JScrollPane(tablaPersonas), BorderLayout.CENTER);
 	    
