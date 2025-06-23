@@ -49,10 +49,12 @@ public class PanelAgregarPrestamo extends JDialog implements ActionListener {
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setActionCommand(PanelAgregarPrestamo.ACEPTAR);
 		btnAceptar.addActionListener(this);
+		panelFormulario.add(btnAceptar);
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setActionCommand(PanelAgregarPrestamo.CANCELAR);
 		btnCancelar.addActionListener(this);
+		panelFormulario.add(btnCancelar);
 		
 		add(panelFormulario, BorderLayout.CENTER);
 		setResizable(false);
