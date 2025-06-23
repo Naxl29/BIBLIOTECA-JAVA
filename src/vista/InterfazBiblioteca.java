@@ -143,9 +143,18 @@ public class InterfazBiblioteca extends JFrame {
 	    	}
 	    });
 	    
+	    // Panel para eliminar persona
+	    JButton btnEliminarPersona = new JButton("Eliminar Persona");
+	    btnEliminarPersona.addActionListener(e -> {
+	    	PanelEliminarPersona dialogo = new PanelEliminarPersona(this, personaDAO);
+	    	dialogo.setVisible(true);
+	    	cargarPersonas();
+	    });
+	    
 	    JPanel panelAgregarPersona = new JPanel();
 	    panelAgregarPersona.add(btnAgregarPersona);
 	    panelAgregarPersona.add(btnActualizarPersona);
+	    panelAgregarPersona.add(btnEliminarPersona);
 	    panelTablaPersonas.add(panelAgregarPersona, BorderLayout.SOUTH);
 	    
 	    tabbedPane.addTab("Personas", panelTablaPersonas);
