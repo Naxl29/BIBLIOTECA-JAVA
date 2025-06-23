@@ -119,12 +119,38 @@ public class InterfazBiblioteca extends JFrame {
 	    	cargarPersonas();
 	    });
 	    
+	    // Panel para actualizar persona
+	    JButton btnActualizarPersona = new JButton("Actualizar Persona");
+	    btnActualizarPersona.addActionListener(e -> {
+	    	String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID de la que desea actualizar:");
+	    	
+	    	if(idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
+	    		try {
+	    			int id = Integer.parseInt(idSeleccionado.trim());
+	    			Persona personaSeleccionada = personaDAO.verPersonaPorId(id);
+	    			
+	    			if (personaSeleccionada != null) {
+	    				PanelActualizarPersona dialogo = new PanelActualizarPersona(this, personaDAO);
+	    				dialogo.cargarDatosPersona(personaSeleccionada);
+	    				dialogo.setVisible(true);
+	    				cargarPersonas();
+	    			} else {
+	    				JOptionPane.showMessageDialog(this, "Persona no encontrada con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
+	    			}
+    			} catch (NumberFormatException ex){
+    				JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+    			}
+	    	}
+	    });
+	    
 	    JPanel panelAgregarPersona = new JPanel();
 	    panelAgregarPersona.add(btnAgregarPersona);
+	    panelAgregarPersona.add(btnActualizarPersona);
 	    panelTablaPersonas.add(panelAgregarPersona, BorderLayout.SOUTH);
 	    
 	    tabbedPane.addTab("Personas", panelTablaPersonas);
 	    add(tabbedPane);
+	    
     }
 	    
 	    private void cargarLibros() {
