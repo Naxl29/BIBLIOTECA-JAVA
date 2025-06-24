@@ -33,7 +33,10 @@ INSERT INTO `generos` (`id`, `genero`) VALUES
 	(4, 'COMEDIA'),
 	(5, 'ROMANCE'),
 	(6, 'DRAMA'),
-	(7, 'DISTOPÍA');
+	(7, 'DISTOPÍA'),
+	(8, 'REALISMO MÁGICO'),
+	(9, 'FANTASÍA ÉPICA'),
+	(10, 'THRILLER');
 
 CREATE TABLE IF NOT EXISTS `libros` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -48,10 +51,17 @@ CREATE TABLE IF NOT EXISTS `libros` (
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `libros` (`id`, `titulo`, `autor`, `editorial`, `id_genero`, `imagen`) VALUES
-	(2, 'NUM', 'NUM', 'NUM', 1, ''),
-	(3, 'NYM', 'NYM', 'NYM', 1, ''),
-	(5, 'ldpdpd', 'sppsps', 'psps', 1, ''),
-	(6, 'kdddsss', 'aaaaa', 'ddddd', 4, '');
+	(10, 'CIEN AÑOS DE SOLEDAD', 'GABRIEL GARCÍA MARQUÉZ', 'EDITORIAL SUDAMERICANA', 8, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\59f5878d-482a-49ac-8d99-cffc38037281.jfif'),
+	(11, '1984', 'GEORGE ORWELL', 'SECKER AND WARBURG', 7, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\George Orwell.jfif'),
+	(12, 'EL SEÑOR DE LOS ANILLOS', 'J.R.R TOLKIEN', 'GEORGE ALLEN', 9, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\el señor de los anillos.jfif'),
+	(13, 'ORGULLO Y PREJUICIO', 'JANE AUSTEN', 'T. EGERTON', 5, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\orgullo y prejuicio.jfif'),
+	(14, 'DON QUIJOTE DE LA MANCHA', 'MIGUEL DE CERVANTES SAAVEDRA', 'FRANCISCO DE ROBLES', 3, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\don quijote.jfif'),
+	(15, 'HARRY POTTER Y LA PIEDRA FILOSOFAL', 'J.K. ROWLING', 'BLOOMSBURY', 3, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\harry potter y la piedra.jfif'),
+	(16, 'LA SOMBRA DEL VIENTO', 'CARLOS RUIZ ZAFÓN', 'PLANETA', 10, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\la sombra del viento.jfif'),
+	(17, 'MATAR UN RUISEÑOR', 'HARPER LEE', 'J.B LIPPINCOTT', 6, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\matar a un ruiseñor.jfif'),
+	(18, 'CRIMEN Y CASTIGO', 'FYODOR DOSTOEVSKY', 'THE RUSSIAN MESSENGER', 2, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\crimen y castigo.jfif'),
+	(19, 'LA CASA DE LOS ESPÍRITUS', 'ISABEL ALLENDE', 'PLAZA & JANÉS', 8, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\la casa de los espiritus.jfif'),
+	(20, 'FAHRENHEIT 451', 'RAY BRADBURY', 'BALLANTINE BOOKS', 1, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\fahrenheit.jfif');
 
 CREATE TABLE IF NOT EXISTS `personas` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -65,9 +75,8 @@ CREATE TABLE IF NOT EXISTS `personas` (
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `personas` (`id`, `primer_nombre`, `segundo_nombre`, `primer_apellido`, `segundo_apellido`, `documento`) VALUES
-	(12, 'NICOLAS', 'ANTONIO', 'ARRIETA', 'LAGOS', '1099735735'),
-	(13, 'HAROL', 'SANTIAGO', 'RODRIGUEZ', 'CASALLAS', '111111'),
-	(14, 'ns', 'ns', 'ns', 'ns', '333333');
+	(18, 'NICOLÁS', 'ANTONIO', 'ARRIETA', 'LAGOS', '1099735735'),
+	(19, 'JOSE', 'DAVID', 'HERNANDEZ', 'NAVAJA', '1073813055');
 
 CREATE TABLE IF NOT EXISTS `prestamos` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -84,10 +93,10 @@ CREATE TABLE IF NOT EXISTS `prestamos` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `prestamos` (`id`, `id_persona`, `id_libro`, `id_estado`) VALUES
-	(2, 12, 2, 1),
-	(3, 13, 3, 1),
-	(4, 14, 2, 2),
-	(5, 12, 6, 2);
+	(1, 18, 15, 1),
+	(2, 18, 20, 2),
+	(3, 19, 10, 1),
+	(4, 19, 16, 2);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

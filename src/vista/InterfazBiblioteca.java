@@ -17,6 +17,7 @@ public class InterfazBiblioteca extends JFrame {
 	private PersonaDAO personaDAO;
 	private PrestamoDAO prestamoDAO;
 	private EstadoDAO estadoDAO;
+	private GeneroDAO generoDAO;
 	
     private JTable tablaLibros;
     private DefaultTableModel modeloTablaLibros;
@@ -26,14 +27,13 @@ public class InterfazBiblioteca extends JFrame {
     
     private JTable tablaPrestamos;
     private DefaultTableModel modeloTablaPrestamos;
-
-    private JTextField txtTitulo, txtAutor, txtEditorial, txtGenero, txtIdEliminar;
     
     public InterfazBiblioteca() {
     	libroDAO= new LibroDAOImpl();
     	personaDAO = new PersonaDAOImpl();
     	prestamoDAO = new PrestamoDAOImpl();
     	estadoDAO = new EstadoDAOImpl();
+    	generoDAO = new GeneroDAOImpl();
     	
     	setTitle("Bibioteca: LA MONDA");
     	setSize(900, 600);
@@ -42,11 +42,19 @@ public class InterfazBiblioteca extends JFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         
-     // -- PANEL LIBROS --
+        // -- PANEL LIBROS --
         JPanel panelTablaLibros = new JPanel(new BorderLayout());
-
-        // Crear el modelo de la tabla
-        modeloTablaLibros = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género"}, 0);
+        modeloTablaLibros = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género", "Imagen"}, 0) {
+	        @Override
+	        public Class<?> getColumnClass(int columnIndex) {
+	            return (columnIndex == 5) ? ImageIcon.class : Object.class;
+	        }
+	
+	        @Override
+	        public boolean isCellEditable(int row, int column) {
+	            return false;
+	        }
+	    };
         tablaLibros = new JTable(modeloTablaLibros);
 
         // Panel para mostrar los detalles de los libros al hacer clic
@@ -56,55 +64,93 @@ public class InterfazBiblioteca extends JFrame {
                 if (filaSeleccionada != -1) {
                     int idLibro = (int) modeloTablaLibros.getValueAt(filaSeleccionada, 0);
                     Libro libro = libroDAO.verLibroPorId(idLibro);
+                    String nombreGenero = generoDAO.obtenerNombreGenero(libro.getIdGenero());
                     if (libro != null) {
-                        JOptionPane.showMessageDialog(null, 
+                    	JPanel panel = new JPanel(new BorderLayout());
+                        JTextArea info = new JTextArea( 
                                 "ID: " + libro.getId() + "\n" +
                                 "Título: " + libro.getTitulo() + "\n" +
                                 "Autor: " + libro.getAutor() + "\n" +
                                 "Editorial: " + libro.getEditorial() + "\n" +
-                                "Género: " + libro.getIdGenero(),
-                                "Detalles del Libro", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(panelTablaLibros, "Libro no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+                                "Género: " + nombreGenero
+                        );
+        				info.setEditable(false); 
+        				panel.add(info, BorderLayout.CENTER);
+        				
+        				if (libro.getImagen() != null && !libro.getImagen().isEmpty()) {
+        					try {
+        						ImageIcon imagen = new ImageIcon(libro.getImagen());
+        						Image img = imagen.getImage().getScaledInstance(100, 150, Image.SCALE_SMOOTH);
+								JLabel labelImagen = new JLabel(new ImageIcon(img));
+								panel.add(labelImagen, BorderLayout.EAST);
+							} catch (Exception e) {
+								JOptionPane.showMessageDialog(panelTablaLibros, "Error al cargar la imagen: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        					}
+        				}
+                        JOptionPane.showMessageDialog(null, panel, "Detalles del Libro", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             }
         });
 
-        // Cargar libros en la tabla
         cargarLibros();
-
-        // Agregar la tabla de libros al panel
         panelTablaLibros.add(new JScrollPane(tablaLibros), BorderLayout.CENTER);
 
-        // Crear el panel para agregar libros
-        JPanel panelAgregarLibros = new JPanel(new GridLayout(2, 1));  // Cambié el layout a uno más sencillo
-
-        // Botón para agregar un libro
+        // Panel para agregar un libro
         JButton btnAgregarLibro = new JButton("Agregar Libro");
         btnAgregarLibro.addActionListener(e -> {
-            // Crear el diálogo para agregar el libro
             PanelAgregarLibro dialogo = new PanelAgregarLibro(this, libroDAO);
-            dialogo.setVisible(true);  // Mostrar el diálogo
-            cargarLibros();  // Recargar la lista de libros después de agregar uno
+            dialogo.setVisible(true);  
+            cargarLibros(); 
         });
-        panelAgregarLibros.add(btnAgregarLibro);  // Agregar el botón al panel
 
+        // Panel para actualizar libro
+        JButton btnActualizarLibro = new JButton("Actualizar Libro");
+        btnActualizarLibro.addActionListener(e -> {
+			String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID del libro a actualizar:");
+			if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
+				try {
+					int id = Integer.parseInt(idSeleccionado.trim());
+					Libro libroSeleccionado = libroDAO.verLibroPorId(id);
+					if (libroSeleccionado != null) {
+						PanelActualizarLibro dialogo = new PanelActualizarLibro(this, libroDAO);
+						dialogo.cargarDatosLibro(libroSeleccionado.getId());
+						dialogo.setVisible(true);
+						cargarLibros();
+					} else {
+						JOptionPane.showMessageDialog(this, "Libro no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+        
+        
         // Panel para eliminar libro
-        txtIdEliminar = new JTextField();
-        JButton btnEliminar = new JButton("Eliminar Libro");
-        btnEliminar.addActionListener(e -> eliminarLibro());  // Eliminar libro al presionar
-
-        panelAgregarLibros.add(new JLabel("ID a eliminar:"));
-        panelAgregarLibros.add(txtIdEliminar);
-        panelAgregarLibros.add(btnEliminar);
-
-        // Agregar el panel de agregar y eliminar al panel de libros
-        panelTablaLibros.add(panelAgregarLibros, BorderLayout.SOUTH);
-
-        // Agregar el panel de libros al JTabbedPane
-        tabbedPane.addTab("Libros", panelTablaLibros);
-        add(tabbedPane);
+	    JButton btnEliminarLibro = new JButton("Eliminar Libro");
+	    btnEliminarLibro.addActionListener(e -> {
+	    	String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID del libro que desea eliminar:");
+	    	if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
+	    		try {
+	    			int id = Integer.parseInt(idSeleccionado.trim());
+	    			libroDAO.eliminarLibro(id);
+	    			cargarLibros();
+	    		} catch (NumberFormatException ex) {
+	    			JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+	    		}
+	    	}
+	    });
+	    
+	    JPanel panelAgregarLibro= new JPanel();
+	    panelAgregarLibro.add(btnAgregarLibro);
+	    panelAgregarLibro.add(btnActualizarLibro);
+	    panelAgregarLibro.add(btnEliminarLibro);
+	    panelTablaLibros.add(panelAgregarLibro, BorderLayout.SOUTH);
+	    
+	    tabbedPane.addTab("Libros", panelTablaLibros);
+	    add(tabbedPane);
+	    
 	    
 	    // -- PANEL PERSONAS --
 	    JPanel panelTablaPersonas = new JPanel(new BorderLayout());
@@ -305,15 +351,29 @@ public class InterfazBiblioteca extends JFrame {
 	    }
 	    
 	    private void cargarLibros() {
-	    	modeloTablaLibros.setRowCount(0); 	
-	    	List<Libro> libros = libroDAO.verTodosLosLibros();
-	    	for (Libro libro : libros) {
-	    		modeloTablaLibros.addRow(new Object[] {
-	    				libro.getId(),
-	    				libro.getTitulo(),
-	    				libro.getAutor(),
-	    				libro.getEditorial(),
-	    				libro.getIdGenero()
+	    	modeloTablaLibros.setRowCount(0);
+	        List<Libro> libros = libroDAO.verTodosLosLibros();
+	        for (Libro libro : libros) {
+	            ImageIcon icono = null;
+	            String nombreGenero = generoDAO.obtenerNombreGenero(libro.getIdGenero());
+	            
+	            if (libro.getImagen() != null && !libro.getImagen().isEmpty()) {
+	                try {
+	                    ImageIcon original = new ImageIcon(libro.getImagen());
+	                    Image imagenEscalada = original.getImage().getScaledInstance(70, 100, Image.SCALE_SMOOTH);
+	                    icono = new ImageIcon(imagenEscalada);
+	                } catch (Exception e) {
+	                    icono = new ImageIcon(); 
+	                }
+	            }
+	            
+	            modeloTablaLibros.addRow(new Object[] {
+	                libro.getId(),
+	                libro.getTitulo(),
+	                libro.getAutor(),
+	                libro.getEditorial(),
+	                nombreGenero != null ? nombreGenero : "Desconocido",
+	                icono
 	    		});
 	    	}
 	    }
@@ -333,39 +393,6 @@ public class InterfazBiblioteca extends JFrame {
 	    	}
 	    }
 	    	
-	    private void agregarLibro() {
-	    	try {
-	    		String titulo = txtTitulo.getText();
-	            String autor = txtAutor.getText();
-	            String editorial = txtEditorial.getText();
-	            int genero = Integer.parseInt(txtGenero.getText());
-	            
-	            Libro libro = new Libro(0, titulo, autor, editorial, genero);
-	            libroDAO.crearLibro(libro);
-	            cargarLibros();
-	            limpiarCampos();
-	        } catch (Exception e) {
-	        	JOptionPane.showMessageDialog(this, "Error al agregar libro: " + e.getMessage());
-	    	}
-	    }
-	    
-	    private void eliminarLibro() {
-	    	try {
-	    		int id = Integer.parseInt(txtIdEliminar.getText());
-	    		libroDAO.eliminarLibro(id);
-	            cargarLibros();
-	            txtIdEliminar.setText("");
-	        } catch (Exception e) {
-	        	JOptionPane.showMessageDialog(this, "Error al eliminar libro: " + e.getMessage());
-	        }
-	    }
-	    
-	    private void limpiarCampos() {
-	    	txtTitulo.setText("");
-	    	txtAutor.setText("");
-	    	txtEditorial.setText("");
-	    	txtGenero.setText("");
-	    }
 	    
 	    public static void main(String[] args) {
 	        SwingUtilities.invokeLater(() -> new InterfazBiblioteca().setVisible(true));

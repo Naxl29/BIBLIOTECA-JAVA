@@ -6,13 +6,15 @@ public class Libro {
 	private String autor;
 	private String editorial;
 	private int id_genero;
+	private String imagen;
 	
-	public Libro(int id, String titulo, String autor, String editorial, int id_genero) {
+	public Libro(int id, String titulo, String autor, String editorial, int id_genero, String imagen) {
 		this.id = id;
 		this.titulo = titulo;
 		this.autor = autor;
 		this.editorial = editorial;
 		this.id_genero = id_genero;
+		this.imagen = imagen;
 	}
 	
 	public int getId() {
@@ -53,6 +55,14 @@ public class Libro {
 	
 	public void setIdGenero(int id_genero) {
 		this.id_genero = id_genero;
+	}
+	
+	public String getImagen() {
+		return imagen;
+	}
+	
+	public void setImagen(String imagen) {
+		this.imagen = imagen;
 	}
 	
 	@Override

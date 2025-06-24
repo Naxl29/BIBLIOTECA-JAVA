@@ -44,4 +44,20 @@ public class GeneroDAOImpl implements GeneroDAO {
         return generoId;  // Retorna el ID del género
     }
 	
+	@Override
+	public String obtenerNombreGenero(int idGenero) {
+		String nombre = null;
+		String sql = "SELECT genero FROM generos WHERE id = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, idGenero);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				nombre = rs.getString("genero");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return nombre;
+	}
+	
 }

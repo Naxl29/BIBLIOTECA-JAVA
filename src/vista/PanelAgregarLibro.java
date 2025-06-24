@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import dao.GeneroDAO;
 import dao.GeneroDAOImpl;
@@ -20,6 +21,8 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 	private JTextField txtAutor;
 	private JTextField txtEditorial;
 	private JComboBox<String> comboGenero;
+	private JTextField txtImagen;
+	private JButton btnSeleccionarImagen;
 	
 	private JButton btnAceptar;
 	private JButton btnCancelar;
@@ -53,8 +56,17 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 		
 		panelFormulario.add(new JLabel("Género:"));
 		comboGenero = new JComboBox<>();
-		cargarGeneros(); // esta llena el JComboBox con los géneros de la base de datos
+		cargarGeneros(); 
 		panelFormulario.add(comboGenero);
+		
+		panelFormulario.add(new JLabel("Imagen:"));
+		JPanel panelImagen = new JPanel(new BorderLayout());
+		txtImagen = new JTextField();
+		btnSeleccionarImagen = new JButton("Seleccionar");
+		btnSeleccionarImagen.addActionListener(e -> seleccionarImagen());
+		panelImagen.add(txtImagen, BorderLayout.CENTER);
+		panelImagen.add(btnSeleccionarImagen, BorderLayout.EAST);
+		panelFormulario.add(panelImagen);
 		
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setActionCommand(PanelAgregarLibro.ACEPTAR);
@@ -79,6 +91,15 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 		}
 	}
 	
+	public void seleccionarImagen() {
+		JFileChooser fileChooser = new JFileChooser();
+		int resultado = fileChooser.showOpenDialog(this);
+		if (resultado == JFileChooser.APPROVE_OPTION) {
+			File archivoSeleccionado = fileChooser.getSelectedFile();
+			txtImagen.setText(archivoSeleccionado.getAbsolutePath());
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
@@ -89,12 +110,13 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 				String autor = txtAutor.getText().trim();
 				String editorial = txtEditorial.getText().trim();
 				String genero = (String) comboGenero.getSelectedItem();
+				String imagen = txtImagen.getText().trim();
 				
 				//obtener el id del género seleccionado
 				int generoId = generoDAO.obtenerIdGenero(genero);
 				
 				//Crear el objeto libro
-				Libro libro = new Libro(0, titulo, autor, editorial, generoId);
+				Libro libro = new Libro(0, titulo, autor, editorial, generoId, imagen);
 				libroDAO.crearLibro(libro);
 				
 				JOptionPane.showMessageDialog(this, "Libro agregado exitosamente.");
