@@ -189,6 +189,38 @@ public class InterfazBiblioteca extends JFrame {
 	    modeloTablaPrestamos = new DefaultTableModel(new String[] {"ID", "Persona", "Libro", "ID Estado"}, 0);
 	    tablaPrestamos = new JTable(modeloTablaPrestamos);
 	    
+	    // Panel para mostrar los detalles del préstamo al hacer clic
+	    tablaPrestamos.addMouseListener(new MouseAdapter() {
+	    	public void mouseClicked(java.awt.event.MouseEvent evt) {
+	    		int filaSeleccionada = tablaPrestamos.getSelectedRow();
+	    		if (filaSeleccionada != -1) {
+	    			int idPrestamo = (int) modeloTablaPrestamos.getValueAt(filaSeleccionada, 0);
+	    			Prestamo prestamo = prestamoDAO.verPrestamoPorId(idPrestamo);
+	    			if (prestamo != null) {
+	    				 Persona persona = personaDAO.verPersonaPorId(prestamo.getIdPersona());
+	    	                Libro libro = libroDAO.verLibroPorId(prestamo.getIdLibro());
+
+	    	                String nombrePersona = (persona != null)
+	    	                    ? persona.getPrimerNombre() + " " + persona.getPrimerApellido()
+	    	                    : "Desconocida";
+
+	    	                String tituloLibro = (libro != null)
+	    	                    ? libro.getTitulo()
+	    	                    : "Desconocido";
+
+	    	                JOptionPane.showMessageDialog(null, 
+	    	                    "ID: " + prestamo.getId() + "\n" +
+	    	                    "Persona: " + nombrePersona + "\n" +
+	    	                    "Libro: " + tituloLibro + "\n" +
+	    	                    "Estado: " + prestamo.getIdEstado(),
+	    	                    "Detalles del Préstamo", JOptionPane.INFORMATION_MESSAGE);
+	    			} else {
+	    				JOptionPane.showMessageDialog(panelTablaPersonas, "Prétamo no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+	    			}
+	    		}
+	    	}
+	    });
+	    
 	    cargarPrestamos();
 	    panelTablaPrestamos.add(new JScrollPane(tablaPrestamos), BorderLayout.CENTER);
 	    
