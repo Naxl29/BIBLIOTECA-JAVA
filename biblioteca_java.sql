@@ -41,14 +41,17 @@ CREATE TABLE IF NOT EXISTS `libros` (
   `autor` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `editorial` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `id_genero` int NOT NULL,
+  `imagen` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_genero` (`id_genero`),
   CONSTRAINT `id_genero` FOREIGN KEY (`id_genero`) REFERENCES `generos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `libros` (`id`, `titulo`, `autor`, `editorial`, `id_genero`) VALUES
-	(2, 'NUM', 'NUM', 'NUM', 1),
-	(3, 'NYM', 'NYM', 'NYM', 1);
+INSERT INTO `libros` (`id`, `titulo`, `autor`, `editorial`, `id_genero`, `imagen`) VALUES
+	(2, 'NUM', 'NUM', 'NUM', 1, ''),
+	(3, 'NYM', 'NYM', 'NYM', 1, ''),
+	(5, 'ldpdpd', 'sppsps', 'psps', 1, ''),
+	(6, 'kdddsss', 'aaaaa', 'ddddd', 4, '');
 
 CREATE TABLE IF NOT EXISTS `personas` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -59,11 +62,12 @@ CREATE TABLE IF NOT EXISTS `personas` (
   `documento` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `Documento` (`documento`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `personas` (`id`, `primer_nombre`, `segundo_nombre`, `primer_apellido`, `segundo_apellido`, `documento`) VALUES
 	(12, 'NICOLAS', 'ANTONIO', 'ARRIETA', 'LAGOS', '1099735735'),
-	(13, 'HAROL', 'SANTIAGO', 'RODRIGUEZ', 'CASALLAS', '111111');
+	(13, 'HAROL', 'SANTIAGO', 'RODRIGUEZ', 'CASALLAS', '111111'),
+	(14, 'ns', 'ns', 'ns', 'ns', '333333');
 
 CREATE TABLE IF NOT EXISTS `prestamos` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -77,8 +81,13 @@ CREATE TABLE IF NOT EXISTS `prestamos` (
   CONSTRAINT `id_estado` FOREIGN KEY (`id_estado`) REFERENCES `estados` (`id`),
   CONSTRAINT `id_libro` FOREIGN KEY (`id_libro`) REFERENCES `libros` (`id`),
   CONSTRAINT `id_persona` FOREIGN KEY (`id_persona`) REFERENCES `personas` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `prestamos` (`id`, `id_persona`, `id_libro`, `id_estado`) VALUES
+	(2, 12, 2, 1),
+	(3, 13, 3, 1),
+	(4, 14, 2, 2),
+	(5, 12, 6, 2);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
