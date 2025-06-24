@@ -167,9 +167,24 @@ public class InterfazBiblioteca extends JFrame {
 	    	}
 	    });
 	    
+	    JButton btnEliminarPersona = new JButton("Eliminar Persona");
+	    btnEliminarPersona.addActionListener(e -> {
+	    	String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID de la persona a eliminar:");
+	    	if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
+	    		try {
+	    			int id = Integer.parseInt(idSeleccionado.trim());
+	    			personaDAO.eliminarPersona(id);
+	    			cargarPersonas();
+	    		} catch (NumberFormatException ex) {
+	    			JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+	    		}
+	    	}
+	    });
+	    
 	    JPanel panelAgregarPersona = new JPanel();
 	    panelAgregarPersona.add(btnAgregarPersona);
 	    panelAgregarPersona.add(btnActualizarPersona);
+	    panelAgregarPersona.add(btnEliminarPersona);
 	    panelTablaPersonas.add(panelAgregarPersona, BorderLayout.SOUTH);
 	    
 	    tabbedPane.addTab("Personas", panelTablaPersonas);
