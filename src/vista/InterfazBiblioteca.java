@@ -50,70 +50,69 @@ public class InterfazBiblioteca extends JFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         
-        // -- PANEL LIBROS --
+     // -- PANEL LIBROS --
         JPanel panelTablaLibros = new JPanel(new BorderLayout());
-    
-	    modeloTablaLibros = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género"}, 0);
-	    tablaLibros = new JTable(modeloTablaLibros);
-	    
-	    //panel para mostrar los detalles de los libros al hacer clic
-	    tablaLibros.addMouseListener(new MouseAdapter() {
-	    	public void mouseClicked(java.awt.event.MouseEvent evt) {
-	    		int filaSeleccionada = tablaLibros.getSelectedRow();
-	    		if (filaSeleccionada != -1) {
-	    			int idLibro = (int) modeloTablaLibros.getValueAt(filaSeleccionada, 0);
-	    			Libro libro = libroDAO.verLibroPorId(idLibro);
-	    			if (libro != null) {
-	    				JOptionPane.showMessageDialog(null, 
-	    						"ID: " + libro.getId() + "\n" +
-	    								"Título: " + libro.getTitulo() + "\n" +
-	    								"Autor: " + libro.getAutor() + "\n" +
-	    								"Editorial: " + libro.getEditorial() + "\n" +
-	    								"Género" + libro.getIdGenero(),
-	    								"Detalles del Libro", JOptionPane.INFORMATION_MESSAGE);
-	    			} else {
-	    				JOptionPane.showMessageDialog(panelTablaLibros, "Libro no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
-	    			}
-	    		}
-	    	}
-	    });
-	    
-	    cargarLibros();
-	    panelTablaLibros.add(new JScrollPane(tablaLibros), BorderLayout.CENTER);
-	    
-	    
-	    //Panel donde se van agregar los libros
-	    JPanel panelAgregarLibros = new JPanel(new GridLayout(7,2));
-	    txtTitulo = new JTextField();
-	    txtAutor = new JTextField();
-	    txtEditorial = new JTextField();
-	    txtGenero = new JTextField();
-	    
-	    panelAgregarLibros.add(new JLabel("Título:"));
-	    panelAgregarLibros.add(txtTitulo);
-	    panelAgregarLibros.add(new JLabel("Autor:"));
-	    panelAgregarLibros.add(txtAutor);
-	    panelAgregarLibros.add(new JLabel("Editorial:"));
-	    panelAgregarLibros.add(txtEditorial);
-	    panelAgregarLibros.add(new JLabel("Género:"));
-	    panelAgregarLibros.add(txtGenero);
-	    
-	    JButton btnAgregarLibro = new JButton("Agregar Libro");
-	    btnAgregarLibro.addActionListener(e -> agregarLibro());
-	    panelAgregarLibros.add(btnAgregarLibro);
-	    
-	    
-	    //El panel para eliminar
-	    txtIdEliminar = new JTextField();
-	    JButton btnEliminar = new JButton("Eliminar Libro");
-	    btnEliminar.addActionListener(e -> eliminarLibro());
-	    
-	    panelAgregarLibros.add(new JLabel("ID a eliminar:"));
-	    panelAgregarLibros.add(txtIdEliminar);
-	    panelAgregarLibros.add(btnEliminar);
-	    
-	    panelTablaLibros.add(panelAgregarLibros, BorderLayout.SOUTH);
-	    tabbedPane.addTab("Libros", panelTablaLibros);
+
+        // Crear el modelo de la tabla
+        modeloTablaLibros = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género"}, 0);
+        tablaLibros = new JTable(modeloTablaLibros);
+
+        // Panel para mostrar los detalles de los libros al hacer clic
+        tablaLibros.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int filaSeleccionada = tablaLibros.getSelectedRow();
+                if (filaSeleccionada != -1) {
+                    int idLibro = (int) modeloTablaLibros.getValueAt(filaSeleccionada, 0);
+                    Libro libro = libroDAO.verLibroPorId(idLibro);
+                    if (libro != null) {
+                        JOptionPane.showMessageDialog(null, 
+                                "ID: " + libro.getId() + "\n" +
+                                "Título: " + libro.getTitulo() + "\n" +
+                                "Autor: " + libro.getAutor() + "\n" +
+                                "Editorial: " + libro.getEditorial() + "\n" +
+                                "Género: " + libro.getIdGenero(),
+                                "Detalles del Libro", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(panelTablaLibros, "Libro no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        // Cargar libros en la tabla
+        cargarLibros();
+
+        // Agregar la tabla de libros al panel
+        panelTablaLibros.add(new JScrollPane(tablaLibros), BorderLayout.CENTER);
+
+        // Crear el panel para agregar libros
+        JPanel panelAgregarLibros = new JPanel(new GridLayout(2, 1));  // Cambié el layout a uno más sencillo
+
+        // Botón para agregar un libro
+        JButton btnAgregarLibro = new JButton("Agregar Libro");
+        btnAgregarLibro.addActionListener(e -> {
+            // Crear el diálogo para agregar el libro
+            PanelAgregarLibro dialogo = new PanelAgregarLibro(this, libroDAO);
+            dialogo.setVisible(true);  // Mostrar el diálogo
+            cargarLibros();  // Recargar la lista de libros después de agregar uno
+        });
+        panelAgregarLibros.add(btnAgregarLibro);  // Agregar el botón al panel
+
+        // Panel para eliminar libro
+        txtIdEliminar = new JTextField();
+        JButton btnEliminar = new JButton("Eliminar Libro");
+        btnEliminar.addActionListener(e -> eliminarLibro());  // Eliminar libro al presionar
+
+        panelAgregarLibros.add(new JLabel("ID a eliminar:"));
+        panelAgregarLibros.add(txtIdEliminar);
+        panelAgregarLibros.add(btnEliminar);
+
+        // Agregar el panel de agregar y eliminar al panel de libros
+        panelTablaLibros.add(panelAgregarLibros, BorderLayout.SOUTH);
+
+        // Agregar el panel de libros al JTabbedPane
+        tabbedPane.addTab("Libros", panelTablaLibros);
+        add(tabbedPane);
 	    
 	    // -- PANEL PERSONAS --
 	    JPanel panelTablaPersonas = new JPanel(new BorderLayout());

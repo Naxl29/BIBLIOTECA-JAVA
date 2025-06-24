@@ -74,10 +74,8 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 	
 	//Cargar los géneros disponibles desde la base de datos
 	private void cargarGeneros() {
-		if (generoDAO != null) {
-			for (String genero : generoDAO.obtenerGeneros()) {
-				comboGenero.addItem(genero);
-			}
+		for (String genero : generoDAO.obtenerGeneros()) {
+			comboGenero.addItem(genero);
 		}
 	}
 	

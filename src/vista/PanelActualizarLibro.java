@@ -5,8 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import modelo.Libro;
+import dao.GeneroDAO;
+import dao.GeneroDAOImpl;
 import dao.LibroDAO;
+import modelo.Libro;
 
 @SuppressWarnings("serial")
 public class PanelActualizarLibro extends JDialog implements ActionListener {
@@ -18,12 +20,13 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 	private JTextField txtTitulo;
 	private JTextField txtAutor;
 	private JTextField txtEditorial;
-	private JTextField txtGenero;
+	private JComboBox<String> comboGenero;
 	
 	private JButton btnAceptar;
 	private JButton btnCancelar;
 	
 	private LibroDAO libroDAO;
+	private GeneroDAO generoDAO;
 
 	public PanelActualizarLibro(JFrame parent, LibroDAO dao) {
 		super(parent, "Actualizar Libro", true);
@@ -38,6 +41,7 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 		
 		panelFormulario.add(new JLabel("ID:"));
 		txtId = new JTextField();
+		txtId.setEditable(false);
 		panelFormulario.add(txtId);
 		
 		panelFormulario.add(new JLabel("Título:"));
@@ -53,8 +57,9 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 		panelFormulario.add(txtEditorial);
 		
 		panelFormulario.add(new JLabel("Género (ID):"));
-		txtGenero = new JTextField();
-		panelFormulario.add(txtGenero);
+		comboGenero = new JComboBox<>();
+        cargarGeneros();  // Cargar géneros disponibles en el JComboBox
+        panelFormulario.add(comboGenero);
 		
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setActionCommand(PanelAgregarLibro.ACEPTAR);
@@ -72,14 +77,14 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 		add(panelBotones, BorderLayout.SOUTH);
 	}
 	
-	public void cargarDatosLibro(Libro libro) {
-	    txtId.setText(String.valueOf(libro.getId()));
-	    txtId.setEditable(false);
-	    txtTitulo.setText(libro.getTitulo());
-	    txtAutor.setText(libro.getAutor());
-	    txtEditorial.setText(libro.getEditorial());
-	    txtGenero.setText(String.valueOf(libro.getIdGenero()));
-	}
+	// Método para cargar los generos disponibles desde la base de datos
+    private void cargarGeneros() {
+        if (libroDAO != null) {
+            for (String genero : generoDAO.obtenerGeneros()) {
+                comboGenero.addItem(genero);
+            }
+        }
+    }
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -91,9 +96,11 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 				String titulo = txtTitulo.getText().trim();
 				String autor = txtAutor.getText().trim();
 				String editorial = txtEditorial.getText().trim();
-				int genero = Integer.parseInt(txtGenero.getText().trim());
+				String genero = (String) comboGenero.getSelectedItem();
 				
-				Libro libro = new Libro(id, titulo, autor, editorial, genero);
+				int generoId = generoDAO.obtenerIdGenero(genero);
+				
+				Libro libro = new Libro(id, titulo, autor, editorial, generoId);
 				libroDAO.actualizarLibro(libro);
 				
 				JOptionPane.showMessageDialog(this, "Libro actualizado exitosamente.");
