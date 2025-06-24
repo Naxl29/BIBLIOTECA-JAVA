@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PrestamoDAOImpl implements PrestamoDAO{
 	private Connection con;
-	
+
 	public PrestamoDAOImpl() {
 		this.con = DBConnection.conectar();
 	}
