@@ -130,19 +130,27 @@ public class InterfazBiblioteca extends JFrame {
         
         
         // Panel para eliminar libro
-	    JButton btnEliminarLibro = new JButton("Eliminar Libro");
-	    btnEliminarLibro.addActionListener(e -> {
-	    	String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID del libro que desea eliminar:");
-	    	if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
-	    		try {
-	    			int id = Integer.parseInt(idSeleccionado.trim());
-	    			libroDAO.eliminarLibro(id);
-	    			cargarLibros();
-	    		} catch (NumberFormatException ex) {
-	    			JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
-	    		}
-	    	}
-	    });
+        JButton btnEliminarLibro = new JButton("Eliminar Libro");
+        btnEliminarLibro.addActionListener(e -> {
+            String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID del libro que desea eliminar:");
+            if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
+                try {
+                    int id = Integer.parseInt(idSeleccionado.trim());
+                    // Verificar si el libro existe antes de intentar eliminarlo
+                    Libro libroSeleccionado = libroDAO.verLibroPorId(id);
+                    if (libroSeleccionado != null) {
+                        libroDAO.eliminarLibro(id);
+                        cargarLibros(); // Volver a cargar la lista de libros después de la eliminación
+                    } else {
+                        // Si no se encuentra el libro con el ID proporcionado
+                        JOptionPane.showMessageDialog(this, "Libro no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    // Si el ID no es un número válido
+                    JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 	    
 	    JPanel panelAgregarLibro= new JPanel();
 	    panelAgregarLibro.add(btnAgregarLibro);
@@ -215,18 +223,27 @@ public class InterfazBiblioteca extends JFrame {
 	    	}
 	    });
 	    
+	    //Panel para eliminar persona
 	    JButton btnEliminarPersona = new JButton("Eliminar Persona");
 	    btnEliminarPersona.addActionListener(e -> {
-	    	String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID de la persona a eliminar:");
-	    	if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
-	    		try {
-	    			int id = Integer.parseInt(idSeleccionado.trim());
-	    			personaDAO.eliminarPersona(id);
-	    			cargarPersonas();
-	    		} catch (NumberFormatException ex) {
-	    			JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
-	    		}
-	    	}
+	        String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID de la persona a eliminar:");
+	        if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
+	            try {
+	                int id = Integer.parseInt(idSeleccionado.trim());
+	                // Verificar si la persona existe antes de intentar eliminarla
+	                Persona personaSeleccionada = personaDAO.verPersonaPorId(id);
+	                if (personaSeleccionada != null) {
+	                    personaDAO.eliminarPersona(id);
+	                    cargarPersonas(); // Volver a cargar la lista de personas después de la eliminación
+	                } else {
+	                    // Si no se encuentra la persona con el ID proporcionado
+	                    JOptionPane.showMessageDialog(this, "Persona no encontrada con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
+	                }
+	            } catch (NumberFormatException ex) {
+	                // Si el ID no es un número válido
+	                JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+	            }
+	        }
 	    });
 	    
 	    JPanel panelAgregarPersona = new JPanel();
