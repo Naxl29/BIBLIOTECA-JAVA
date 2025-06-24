@@ -84,7 +84,6 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 		add(panelBotones, BorderLayout.SOUTH);
 	}
 	
-	//Cargar los géneros disponibles desde la base de datos
 	private void cargarGeneros() {
 		for (String genero : generoDAO.obtenerGeneros()) {
 			comboGenero.addItem(genero);
@@ -112,10 +111,13 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 				String genero = (String) comboGenero.getSelectedItem();
 				String imagen = txtImagen.getText().trim();
 				
-				//obtener el id del género seleccionado
 				int generoId = generoDAO.obtenerIdGenero(genero);
 				
-				//Crear el objeto libro
+				if (titulo.isEmpty() || autor.isEmpty() || editorial.isEmpty() || generoId == -1 || imagen.isEmpty()) {
+					JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				Libro libro = new Libro(0, titulo, autor, editorial, generoId, imagen);
 				libroDAO.crearLibro(libro);
 				

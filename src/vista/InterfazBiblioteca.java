@@ -3,7 +3,6 @@ package vista;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import dao.*;
 import modelo.*;
@@ -35,7 +34,7 @@ public class InterfazBiblioteca extends JFrame {
     	estadoDAO = new EstadoDAOImpl();
     	generoDAO = new GeneroDAOImpl();
     	
-    	setTitle("Bibioteca: LA MONDA");
+    	setTitle("Biblioteca N & J");
     	setSize(900, 600);
     	setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -136,17 +135,14 @@ public class InterfazBiblioteca extends JFrame {
             if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
                 try {
                     int id = Integer.parseInt(idSeleccionado.trim());
-                    // Verificar si el libro existe antes de intentar eliminarlo
                     Libro libroSeleccionado = libroDAO.verLibroPorId(id);
                     if (libroSeleccionado != null) {
                         libroDAO.eliminarLibro(id);
-                        cargarLibros(); // Volver a cargar la lista de libros después de la eliminación
+                        cargarLibros(); 
                     } else {
-                        // Si no se encuentra el libro con el ID proporcionado
                         JOptionPane.showMessageDialog(this, "Libro no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException ex) {
-                    // Si el ID no es un número válido
                     JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -230,17 +226,13 @@ public class InterfazBiblioteca extends JFrame {
 	        if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
 	            try {
 	                int id = Integer.parseInt(idSeleccionado.trim());
-	                // Verificar si la persona existe antes de intentar eliminarla
 	                Persona personaSeleccionada = personaDAO.verPersonaPorId(id);
 	                if (personaSeleccionada != null) {
 	                    personaDAO.eliminarPersona(id);
-	                    cargarPersonas(); // Volver a cargar la lista de personas después de la eliminación
 	                } else {
-	                    // Si no se encuentra la persona con el ID proporcionado
 	                    JOptionPane.showMessageDialog(this, "Persona no encontrada con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
 	                }
 	            } catch (NumberFormatException ex) {
-	                // Si el ID no es un número válido
 	                JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
 	            }
 	        }
@@ -328,11 +320,32 @@ public class InterfazBiblioteca extends JFrame {
 	            }
 	        }
 	    });
+	    
+	    //Panel para eliminar préstamo
+	    JButton btnEliminarPrestamo = new JButton("Eliminar Préstamo");
+	    btnEliminarPrestamo.addActionListener(e -> {
+	        String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID del préstamo a eliminar:");
+	        if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
+	            try {
+	                int id = Integer.parseInt(idSeleccionado.trim());
+	                Prestamo prestamoSeleccionado = prestamoDAO.verPrestamoPorId(id);
+	                if (prestamoSeleccionado != null) {
+	                    prestamoDAO.eliminarPrestamo(id);
+	                    cargarPrestamos(); 
+	                } else {
+	                    JOptionPane.showMessageDialog(this, "Préstamo no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
+	                }
+	            } catch (NumberFormatException ex) {
+	                JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+	            }
+	        }
+	    });
 
 	    
 	    JPanel panelBotonesPrestamo = new JPanel();
 	    panelBotonesPrestamo.add(btnAgregarPrestamo);
 	    panelBotonesPrestamo.add(btnActualizarPrestamo);
+	    panelBotonesPrestamo.add(btnEliminarPrestamo);
 	    panelTablaPrestamos.add(panelBotonesPrestamo, BorderLayout.SOUTH);
 	    
 	    tabbedPane.addTab("Préstamos", panelTablaPrestamos);
