@@ -16,7 +16,6 @@ public class PanelAgregarPrestamo extends JDialog implements ActionListener {
 	
 	private JComboBox<Persona> cbPersonas;
 	private JComboBox<Libro> cbLibros;
-	private JComboBox<Estado> cbEstados;
 	
 	private JButton btnAceptar;
 	private JButton btnCancelar;

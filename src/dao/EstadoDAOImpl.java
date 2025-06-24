@@ -30,4 +30,23 @@ public class EstadoDAOImpl implements EstadoDAO{
 		return estados;
 	}
 	
+	@Override
+	public Estado verEstadoPorId(int id) {
+		String sql = "SELECT * FROM estados WHERE id = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					return new Estado(
+						rs.getInt("id"),
+						rs.getString("estado")
+					);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }

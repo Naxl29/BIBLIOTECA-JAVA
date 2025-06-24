@@ -5,18 +5,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-
-import dao.LibroDAO;
-import dao.LibroDAOImpl;
-import modelo.Libro;
-
-import modelo.Persona;
-import dao.PersonaDAO;
-import dao.PersonaDAOImpl;
-
-import modelo.Prestamo;
-import dao.PrestamoDAO;
-import dao.PrestamoDAOImpl;
+import dao.*;
+import modelo.*;
 
 import java.awt.*;
 import java.util.List;
@@ -26,6 +16,7 @@ public class InterfazBiblioteca extends JFrame {
 	private LibroDAO libroDAO;
 	private PersonaDAO personaDAO;
 	private PrestamoDAO prestamoDAO;
+	private EstadoDAO estadoDAO;
 	
     private JTable tablaLibros;
     private DefaultTableModel modeloTablaLibros;
@@ -42,7 +33,8 @@ public class InterfazBiblioteca extends JFrame {
     	libroDAO= new LibroDAOImpl();
     	personaDAO = new PersonaDAOImpl();
     	prestamoDAO = new PrestamoDAOImpl();
-  
+    	estadoDAO = new EstadoDAOImpl();
+    	
     	setTitle("Bibioteca: LA MONDA");
     	setSize(900, 600);
     	setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -185,7 +177,7 @@ public class InterfazBiblioteca extends JFrame {
 	    
 	    // -- PANEL PRESTAMOS --
 	    JPanel panelTablaPrestamos = new JPanel(new BorderLayout());
-	    modeloTablaPrestamos = new DefaultTableModel(new String[] {"ID", "Persona", "Libro", "ID Estado"}, 0);
+	    modeloTablaPrestamos = new DefaultTableModel(new String[] {"ID", "Persona", "Libro", "Estado"}, 0);
 	    tablaPrestamos = new JTable(modeloTablaPrestamos);
 	    
 	    // Panel para mostrar los detalles del préstamo al hacer clic
@@ -198,6 +190,7 @@ public class InterfazBiblioteca extends JFrame {
 	    			if (prestamo != null) {
 	    				 Persona persona = personaDAO.verPersonaPorId(prestamo.getIdPersona());
 	    	                Libro libro = libroDAO.verLibroPorId(prestamo.getIdLibro());
+	    	                Estado estado = estadoDAO.verEstadoPorId(prestamo.getIdEstado());
 
 	    	                String nombrePersona = (persona != null)
 	    	                    ? persona.getPrimerNombre() + " " + persona.getPrimerApellido()
@@ -206,12 +199,16 @@ public class InterfazBiblioteca extends JFrame {
 	    	                String tituloLibro = (libro != null)
 	    	                    ? libro.getTitulo()
 	    	                    : "Desconocido";
+	    	                
+	    	                String estadoPrestamo = (estado != null)
+	    	                	? estado.getEstado()
+	    	                	: "Desconocido";
 
 	    	                JOptionPane.showMessageDialog(null, 
 	    	                    "ID: " + prestamo.getId() + "\n" +
 	    	                    "Persona: " + nombrePersona + "\n" +
 	    	                    "Libro: " + tituloLibro + "\n" +
-	    	                    "Estado: " + prestamo.getIdEstado(),
+	    	                    "Estado: " + estadoPrestamo + "\n",
 	    	                    "Detalles del Préstamo", JOptionPane.INFORMATION_MESSAGE);
 	    			} else {
 	    				JOptionPane.showMessageDialog(panelTablaPersonas, "Prétamo no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -269,7 +266,8 @@ public class InterfazBiblioteca extends JFrame {
 	    	for (Prestamo prestamo : prestamos) {
 	            Persona persona = personaDAO.verPersonaPorId(prestamo.getIdPersona());
 	            Libro libro = libroDAO.verLibroPorId(prestamo.getIdLibro());
-
+	            Estado estado = estadoDAO.verEstadoPorId(prestamo.getIdEstado());
+	            
 	            String nombrePersona = (persona != null) 
 	                ? persona.getPrimerNombre() + " " + persona.getPrimerApellido() 
 	                : "Desconocido";
@@ -277,12 +275,16 @@ public class InterfazBiblioteca extends JFrame {
 	            String tituloLibro = (libro != null) 
 	                ? libro.getTitulo() 
 	                : "Desconocido";
+	            
+	            String estadoPrestamo = (estado != null)
+	                	? estado.getEstado()
+	                	: "Desconocido";
 
 	            modeloTablaPrestamos.addRow(new Object[] {
 	                prestamo.getId(),
 	                nombrePersona,
 	                tituloLibro,
-	                prestamo.getIdEstado()
+	                estadoPrestamo
 	    		});
 	    	}
 	    }
