@@ -13,6 +13,11 @@ public class Prestamo {
 		this.id_estado = id_estado;
 	}	
 	
+	public Prestamo(int id, int id_estado) {
+		this.id = id;
+		this.id_estado = id_estado;
+	}
+	
 	public int getId() {
 		return id;
 	}
