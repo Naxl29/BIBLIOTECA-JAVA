@@ -56,6 +56,8 @@ public class InterfazBiblioteca extends JFrame {
 	        }
 	    };
         tablaLibros = new JTable(modeloTablaLibros);
+        tablaLibros.setRowHeight(80); 
+        tablaLibros.getColumnModel().getColumn(5).setPreferredWidth(80);
 
         // Panel para mostrar los detalles de los libros al hacer clic
         tablaLibros.addMouseListener(new MouseAdapter() {
