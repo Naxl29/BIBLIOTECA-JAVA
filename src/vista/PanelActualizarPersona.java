@@ -57,7 +57,7 @@ public class PanelActualizarPersona extends JDialog implements ActionListener {
 		txtSegundoApellido = new JTextField();
 		panelFormulario.add(txtSegundoApellido);
 
-		panelFormulario.add(new JLabel("Número de Documento:"));
+		panelFormulario.add(new JLabel("Número de Documentos:"));
 		txtDocumento = new JTextField();
 		panelFormulario.add(txtDocumento);
 

@@ -14,6 +14,10 @@ import modelo.Persona;
 import dao.PersonaDAO;
 import dao.PersonaDAOImpl;
 
+import modelo.Prestamo;
+import dao.PrestamoDAO;
+import dao.PrestamoDAOImpl;
+
 import java.awt.*;
 import java.util.List;
 
@@ -21,18 +25,23 @@ import java.util.List;
 public class InterfazBiblioteca extends JFrame {
 	private LibroDAO libroDAO;
 	private PersonaDAO personaDAO;
+	private PrestamoDAO prestamoDAO;
 	
     private JTable tablaLibros;
     private DefaultTableModel modeloTablaLibros;
     
     private JTable tablaPersonas;
     private DefaultTableModel modeloTablaPersonas;
+    
+    private JTable tablaPrestamos;
+    private DefaultTableModel modeloTablaPrestamos;
 
     private JTextField txtTitulo, txtAutor, txtEditorial, txtGenero, txtIdEliminar;
     
     public InterfazBiblioteca() {
     	libroDAO= new LibroDAOImpl();
     	personaDAO = new PersonaDAOImpl();
+    	prestamoDAO = new PrestamoDAOImpl();
   
     	setTitle("Bibioteca: LA MONDA");
     	setSize(900, 600);
@@ -46,6 +55,29 @@ public class InterfazBiblioteca extends JFrame {
     
 	    modeloTablaLibros = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género"}, 0);
 	    tablaLibros = new JTable(modeloTablaLibros);
+	    
+	    //panel para mostrar los detalles de los libros al hacer clic
+	    tablaLibros.addMouseListener(new MouseAdapter() {
+	    	public void mouseClicked(java.awt.event.MouseEvent evt) {
+	    		int filaSeleccionada = tablaLibros.getSelectedRow();
+	    		if (filaSeleccionada != -1) {
+	    			int idLibro = (int) modeloTablaLibros.getValueAt(filaSeleccionada, 0);
+	    			Libro libro = libroDAO.verLibroPorId(idLibro);
+	    			if (libro != null) {
+	    				JOptionPane.showMessageDialog(null, 
+	    						"ID: " + libro.getId() + "\n" +
+	    								"Título: " + libro.getTitulo() + "\n" +
+	    								"Autor: " + libro.getAutor() + "\n" +
+	    								"Editorial: " + libro.getEditorial() + "\n" +
+	    								"Género" + libro.getIdGenero(),
+	    								"Detalles del Libro", JOptionPane.INFORMATION_MESSAGE);
+	    			} else {
+	    				JOptionPane.showMessageDialog(panelTablaLibros, "Libro no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+	    			}
+	    		}
+	    	}
+	    });
+	    
 	    cargarLibros();
 	    panelTablaLibros.add(new JScrollPane(tablaLibros), BorderLayout.CENTER);
 	    
@@ -69,6 +101,7 @@ public class InterfazBiblioteca extends JFrame {
 	    JButton btnAgregarLibro = new JButton("Agregar Libro");
 	    btnAgregarLibro.addActionListener(e -> agregarLibro());
 	    panelAgregarLibros.add(btnAgregarLibro);
+	    
 	    
 	    //El panel para eliminar
 	    txtIdEliminar = new JTextField();
@@ -103,28 +136,6 @@ public class InterfazBiblioteca extends JFrame {
 	    						"Detalles de la Persona", JOptionPane.INFORMATION_MESSAGE);
 	    			} else {
 	    				JOptionPane.showMessageDialog(panelTablaPersonas, "Persona no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
-	    			}
-	    		}
-	    	}
-	    });
-	    
-	    //panel para mostrar los detalles de los libros al hacer clic
-	    tablaLibros.addMouseListener(new MouseAdapter() {
-	    	public void mouseClicked(java.awt.event.MouseEvent evt) {
-	    		int filaSeleccionada = tablaLibros.getSelectedRow();
-	    		if (filaSeleccionada != -1) {
-	    			int idLibro = (int) modeloTablaLibros.getValueAt(filaSeleccionada, 0);
-	    			Libro libro = libroDAO.verLibroPorId(idLibro);
-	    			if (libro != null) {
-	    				JOptionPane.showMessageDialog(null, 
-	    						"ID: " + libro.getId() + "\n" +
-	    						"Título: " + libro.getTitulo() + "\n" +
-	    						"Autor: " + libro.getAutor() + "\n" +
-	    						"Editorial: " + libro.getEditorial() + "\n" +
-	    						"Género" + libro.getIdGenero(),
-	    						"Detalles del Libro", JOptionPane.INFORMATION_MESSAGE);
-	    			} else {
-	    				JOptionPane.showMessageDialog(panelTablaLibros, "Libro no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
 	    			}
 	    		}
 	    	}
@@ -173,7 +184,77 @@ public class InterfazBiblioteca extends JFrame {
 	    tabbedPane.addTab("Personas", panelTablaPersonas);
 	    add(tabbedPane);
 	    
+	    // -- PANEL PRESTAMOS --
+	    JPanel panelTablaPrestamos = new JPanel(new BorderLayout());
+	    modeloTablaPrestamos = new DefaultTableModel(new String[] {"ID", "Persona", "Libro", "ID Estado"}, 0);
+	    tablaPrestamos = new JTable(modeloTablaPrestamos);
+	    
+	    cargarPrestamos();
+	    panelTablaPrestamos.add(new JScrollPane(tablaPrestamos), BorderLayout.CENTER);
+	    
+	    JButton btnAgregarPrestamo = new JButton("Agregar Préstamo");
+	    btnAgregarPrestamo.addActionListener(e -> {
+	    	PanelAgregarPrestamo dialogo = new PanelAgregarPrestamo(this, prestamoDAO);
+	    	dialogo.setVisible(true);
+	    	cargarPrestamos();
+	    });
+	    
+	    // Panel para actualizar préstamo
+	    JButton btnActualizarPrestamo = new JButton("Actualizar Préstamo");
+	    btnActualizarPrestamo.addActionListener(e -> {
+	        String idStr = JOptionPane.showInputDialog(this, "Ingrese el ID del préstamo a actualizar:");
+	        if (idStr != null && !idStr.trim().isEmpty()) {
+	            try {
+	                int id = Integer.parseInt(idStr.trim());
+	                Prestamo prestamo = prestamoDAO.verPrestamoPorId(id);
+	                if (prestamo != null) {
+	                    PanelActualizarPrestamo dialogo = new PanelActualizarPrestamo(this, prestamoDAO);
+	                    dialogo.cargarDatosPrestamo(prestamo);
+	                    dialogo.setVisible(true);
+	                    cargarPrestamos();
+	                } else {
+	                    JOptionPane.showMessageDialog(this, "Préstamo no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
+	                }
+	            } catch (NumberFormatException ex) {
+	                JOptionPane.showMessageDialog(this, "ID inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+	            }
+	        }
+	    });
+
+	    
+	    JPanel panelBotonesPrestamo = new JPanel();
+	    panelBotonesPrestamo.add(btnAgregarPrestamo);
+	    panelBotonesPrestamo.add(btnActualizarPrestamo);
+	    panelTablaPrestamos.add(panelBotonesPrestamo, BorderLayout.SOUTH);
+	    
+	    tabbedPane.addTab("Préstamos", panelTablaPrestamos);
+	    add(tabbedPane);
+	    
     }
+	    
+	    private void cargarPrestamos() {
+	    	modeloTablaPrestamos.setRowCount(0); 
+	    	List<Prestamo> prestamos = prestamoDAO.verTodosLosPrestamos();
+	    	for (Prestamo prestamo : prestamos) {
+	            Persona persona = personaDAO.verPersonaPorId(prestamo.getIdPersona());
+	            Libro libro = libroDAO.verLibroPorId(prestamo.getIdLibro());
+
+	            String nombrePersona = (persona != null) 
+	                ? persona.getPrimerNombre() + " " + persona.getPrimerApellido() 
+	                : "Desconocido";
+
+	            String tituloLibro = (libro != null) 
+	                ? libro.getTitulo() 
+	                : "Desconocido";
+
+	            modeloTablaPrestamos.addRow(new Object[] {
+	                prestamo.getId(),
+	                nombrePersona,
+	                tituloLibro,
+	                prestamo.getIdEstado()
+	    		});
+	    	}
+	    }
 	    
 	    private void cargarLibros() {
 	    	modeloTablaLibros.setRowCount(0); 	

@@ -48,6 +48,28 @@ public class PrestamoDAOImpl implements PrestamoDAO{
 	}
 	
 	@Override
+	public Prestamo verPrestamoPorId(int id) {
+		String sql = "SELECT * FROM prestamos WHERE id = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, id);
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					return new Prestamo(
+						rs.getInt("id"),
+						rs.getInt("id_persona"),
+						rs.getInt("id_libro"),
+						rs.getInt("id_estado")
+					);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	@Override
 	public void actualizarPrestamo(Prestamo prestamo) {
 		String sql = "UPDATE prestamos SET id_estado = ? WHERE id = ?";
 		try (PreparedStatement stmt = con.prepareStatement(sql)) {
