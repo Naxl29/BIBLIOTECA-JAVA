@@ -5,8 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import modelo.Prestamo;
-import dao.PrestamoDAO;
+import modelo.*;
+import dao.*;
 
 @SuppressWarnings("serial")
 public class PanelAgregarPrestamo extends JDialog implements ActionListener {
@@ -14,14 +14,17 @@ public class PanelAgregarPrestamo extends JDialog implements ActionListener {
 	public final static String ACEPTAR = "Aceptar";
 	public final static String CANCELAR = "Cancelar";
 	
-	private JTextField txtIdPersona;
-	private JTextField txtIdLibro;
-	private JTextField txtIdEstado;
+	private JComboBox<Persona> cbPersonas;
+	private JComboBox<Libro> cbLibros;
+	private JComboBox<Estado> cbEstados;
 	
 	private JButton btnAceptar;
 	private JButton btnCancelar;
 	
 	private PrestamoDAO prestamoDAO;
+	
+	private PersonaDAO personaDAO = new PersonaDAOImpl();
+	private LibroDAO libroDAO = new LibroDAOImpl();
 	
 	public PanelAgregarPrestamo(JFrame parent, PrestamoDAO dao) {
 		super(parent, "Agregar Préstamo", true);
@@ -35,28 +38,33 @@ public class PanelAgregarPrestamo extends JDialog implements ActionListener {
 		panelFormulario.setBorder(BorderFactory.createTitledBorder("Datos del Préstamo"));
 		
 		panelFormulario.add(new JLabel("ID Persona:"));
-		txtIdPersona = new JTextField();
-		panelFormulario.add(txtIdPersona);
+		cbPersonas = new JComboBox<>();
+		for (Persona persona : personaDAO.verTodasLasPersonas()) {
+			cbPersonas.addItem(persona);
+		}
+		panelFormulario.add(cbPersonas);
 		
 		panelFormulario.add(new JLabel("ID Libro:"));
-		txtIdLibro = new JTextField();
-		panelFormulario.add(txtIdLibro);
-		
-		panelFormulario.add(new JLabel("ID Estado:"));
-		txtIdEstado = new JTextField();
-		panelFormulario.add(txtIdEstado);
+		cbLibros = new JComboBox<>();
+		for (Libro libro : libroDAO.verTodosLosLibros()) {
+			cbLibros.addItem(libro);
+		}
+		panelFormulario.add(cbLibros);
 		
 		btnAceptar = new JButton("Aceptar");
-		btnAceptar.setActionCommand(PanelAgregarPrestamo.ACEPTAR);
+		btnAceptar.setActionCommand(ACEPTAR);
 		btnAceptar.addActionListener(this);
-		panelFormulario.add(btnAceptar);
 		
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setActionCommand(PanelAgregarPrestamo.CANCELAR);
+		btnCancelar.setActionCommand(CANCELAR);
 		btnCancelar.addActionListener(this);
+		
+		JPanel panelBotones = new JPanel();
+		panelFormulario.add(btnAceptar);
 		panelFormulario.add(btnCancelar);
 		
 		add(panelFormulario, BorderLayout.CENTER);
+		add(panelBotones, BorderLayout.SOUTH);
 		setResizable(false);
 	}
 	
@@ -65,16 +73,18 @@ public class PanelAgregarPrestamo extends JDialog implements ActionListener {
 		String comando = e.getActionCommand();
 		
 		if (comando.equals(ACEPTAR)) {
-			int idPersona = Integer.parseInt(txtIdPersona.getText());
-			int idLibro = Integer.parseInt(txtIdLibro.getText());
-			int idEstado = Integer.parseInt(txtIdEstado.getText());
+			Persona personaSeleccionada = (Persona) cbPersonas.getSelectedItem();
+			Libro libroSeleccionado = (Libro) cbLibros.getSelectedItem();
 			
-			if (idPersona <= 0 || idLibro <= 0 || idEstado <= 0) {
-				JOptionPane.showMessageDialog(this, "Los IDs deben ser mayores a cero.", "Error", JOptionPane.ERROR_MESSAGE);
+			if (personaSeleccionada == null || libroSeleccionado == null) {
+				JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
 				return;
 			}
 			
-			Prestamo prestamo = new Prestamo(0, idPersona, idLibro, idEstado);
+			int estadoId = 1; 
+			
+			Prestamo prestamo = new Prestamo(0, personaSeleccionada.getId(), 
+				libroSeleccionado.getId(), estadoId);
 			prestamoDAO.crearPrestamo(prestamo);
 			
 			JOptionPane.showMessageDialog(this, "Préstamo agregado exitosamente.");
