@@ -5,8 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import modelo.Libro;
+import dao.GeneroDAO;
+import dao.GeneroDAOImpl;
 import dao.LibroDAO;
+import modelo.Libro;
 
 @SuppressWarnings("serial")
 public class PanelAgregarLibro extends JDialog implements ActionListener {
@@ -17,16 +19,18 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 	private JTextField txtTitulo;
 	private JTextField txtAutor;
 	private JTextField txtEditorial;
-	private JTextField txtGenero;
+	private JComboBox<String> comboGenero;
 	
 	private JButton btnAceptar;
 	private JButton btnCancelar;
 	
 	private LibroDAO libroDAO;
+	private GeneroDAO generoDAO;
 	
 	public PanelAgregarLibro(JFrame parent, LibroDAO dao) {
 		super(parent, "Agregar Libro", true);
 		this.libroDAO = dao;
+		this.generoDAO = new GeneroDAOImpl();
 		
 		setSize(400, 300);
 		setLocationRelativeTo(parent);
@@ -47,9 +51,10 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 		txtEditorial = new JTextField();
 		panelFormulario.add(txtEditorial);
 		
-		panelFormulario.add(new JLabel("Género (ID):"));
-		txtGenero = new JTextField();
-		panelFormulario.add(txtGenero);
+		panelFormulario.add(new JLabel("Género:"));
+		comboGenero = new JComboBox<>();
+		cargarGeneros(); // esta llena el JComboBox con los géneros de la base de datos
+		panelFormulario.add(comboGenero);
 		
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setActionCommand(PanelAgregarLibro.ACEPTAR);
@@ -66,7 +71,16 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 		add(panelFormulario, BorderLayout.CENTER);
 		add(panelBotones, BorderLayout.SOUTH);
 	}
-		
+	
+	//Cargar los géneros disponibles desde la base de datos
+	private void cargarGeneros() {
+		if (generoDAO != null) {
+			for (String genero : generoDAO.obtenerGeneros()) {
+				comboGenero.addItem(genero);
+			}
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
@@ -76,9 +90,13 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 				String titulo = txtTitulo.getText().trim();
 				String autor = txtAutor.getText().trim();
 				String editorial = txtEditorial.getText().trim();
-				int genero = Integer.parseInt(txtGenero.getText().trim());
+				String genero = (String) comboGenero.getSelectedItem();
 				
-				Libro libro = new Libro(0, titulo, autor, editorial, genero);
+				//obtener el id del género seleccionado
+				int generoId = generoDAO.obtenerIdGenero(genero);
+				
+				//Crear el objeto libro
+				Libro libro = new Libro(0, titulo, autor, editorial, generoId);
 				libroDAO.crearLibro(libro);
 				
 				JOptionPane.showMessageDialog(this, "Libro agregado exitosamente.");
