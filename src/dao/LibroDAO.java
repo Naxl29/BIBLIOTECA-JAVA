@@ -9,5 +9,6 @@ public interface LibroDAO {
     List<Libro> verTodosLosLibros();
     void actualizarLibro(Libro libro);
     void eliminarLibro(int id);
+    List<Libro> ordenarPorTitulo();
     
 }

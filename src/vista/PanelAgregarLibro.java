@@ -21,7 +21,7 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 	private JTextField txtAutor;
 	private JTextField txtEditorial;
 	private JComboBox<String> comboGenero;
-	private JTextField txtImagen;
+	private JTextField txtImagen; 	 
 	private JButton btnSeleccionarImagen;
 	
 	private JButton btnAceptar;

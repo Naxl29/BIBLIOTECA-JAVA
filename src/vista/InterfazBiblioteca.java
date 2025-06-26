@@ -147,11 +147,17 @@ public class InterfazBiblioteca extends JFrame {
                 }
             }
         });
+        
+        JButton btnOrdenarLibros = new JButton("Ordenar por Título");
+        btnOrdenarLibros.addActionListener(e -> {
+        	cargarLibrosOrdenados();
+        });
 	    
 	    JPanel panelAgregarLibro= new JPanel();
 	    panelAgregarLibro.add(btnAgregarLibro);
 	    panelAgregarLibro.add(btnActualizarLibro);
 	    panelAgregarLibro.add(btnEliminarLibro);
+	    panelAgregarLibro.add(btnOrdenarLibros);
 	    panelTablaLibros.add(panelAgregarLibro, BorderLayout.SOUTH);
 	    
 	    tabbedPane.addTab("Libros", panelTablaLibros);
@@ -406,6 +412,35 @@ public class InterfazBiblioteca extends JFrame {
 	                libro.getEditorial(),
 	                nombreGenero != null ? nombreGenero : "Desconocido",
 	                icono
+	    		});
+	    	}
+	    }
+	    
+	    private void cargarLibrosOrdenados() {
+	    	modeloTablaLibros.setRowCount(0);
+	    	List<Libro> libros = libroDAO.ordenarPorTitulo();
+	    	
+	    	for (Libro libro : libros) {
+	    		ImageIcon icono = null;
+	    		String nombreGenero = generoDAO.obtenerNombreGenero(libro.getIdGenero());
+	    		
+	    		if (libro.getImagen() != null && !libro.getImagen().isEmpty()) {
+	    			try {
+	    				ImageIcon original = new ImageIcon(libro.getImagen());
+	    				Image imagenEscalada = original.getImage().getScaledInstance(70, 100, Image.SCALE_SMOOTH);
+	    				icono = new ImageIcon(imagenEscalada);
+	    			} catch (Exception e) {
+	    				icono = new ImageIcon(); 
+	    			}
+	    		}
+	    		
+	    		modeloTablaLibros.addRow(new Object[] {
+	    				libro.getId(),
+	    				libro.getTitulo(),
+	    				libro.getAutor(),
+	    				libro.getEditorial(),
+	    				nombreGenero != null ? nombreGenero : "Desconocido",
+	    				icono
 	    		});
 	    	}
 	    }

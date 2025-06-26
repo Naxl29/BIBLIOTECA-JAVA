@@ -100,4 +100,10 @@ public class LibroDAOImpl implements LibroDAO {
             e.printStackTrace();
         }
     }
+    
+	public List<Libro> ordenarPorTitulo() {
+		List<Libro> libros = verTodosLosLibros();
+		libros.sort((l1, l2)->l1.getTitulo().compareToIgnoreCase(l2.getTitulo()));
+		return libros;
+	}
 }
