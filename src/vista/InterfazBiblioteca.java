@@ -3,6 +3,7 @@ package vista;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
+import java.util.function.*;
 
 import dao.*;
 import modelo.*;
@@ -107,46 +108,20 @@ public class InterfazBiblioteca extends JFrame {
 
         // Panel para actualizar libro
         JButton btnActualizarLibro = new JButton("Actualizar Libro");
-        btnActualizarLibro.addActionListener(e -> {
-			String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID del libro a actualizar:");
-			if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
-				try {
-					int id = Integer.parseInt(idSeleccionado.trim());
-					Libro libroSeleccionado = libroDAO.verLibroPorId(id);
-					if (libroSeleccionado != null) {
-						PanelActualizarLibro dialogo = new PanelActualizarLibro(this, libroDAO);
-						dialogo.cargarDatosLibro(libroSeleccionado.getId());
-						dialogo.setVisible(true);
-						cargarLibros();
-					} else {
-						JOptionPane.showMessageDialog(this, "Libro no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
-					}
-				} catch (NumberFormatException ex) {
-					JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
+        btnActualizarLibro.addActionListener(e -> actualizarPorId("Libro", libroDAO::verLibroPorId, libro -> {
+        	PanelActualizarLibro dialogo = new PanelActualizarLibro(this, libroDAO);
+        	dialogo.cargarDatosLibro(libro);
+        	dialogo.setVisible(true);
+        	cargarLibros();
+        }));
         
         
         // Panel para eliminar libro
         JButton btnEliminarLibro = new JButton("Eliminar Libro");
-        btnEliminarLibro.addActionListener(e -> {
-            String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID del libro que desea eliminar:");
-            if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
-                try {
-                    int id = Integer.parseInt(idSeleccionado.trim());
-                    Libro libroSeleccionado = libroDAO.verLibroPorId(id);
-                    if (libroSeleccionado != null) {
-                        libroDAO.eliminarLibro(id);
-                        cargarLibros(); 
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Libro no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+        btnEliminarLibro.addActionListener(e -> eliminarPorId("Libro", libroDAO::verLibroPorId, id ->{
+        	libroDAO.eliminarLibro(id);
+        	cargarLibros();
+        }));
         
         JButton btnOrdenarLibros = new JButton("Ordenar por Título");
         btnOrdenarLibros.addActionListener(e -> {
@@ -203,46 +178,19 @@ public class InterfazBiblioteca extends JFrame {
 	    
 	    // Panel para actualizar persona
 	    JButton btnActualizarPersona = new JButton("Actualizar Persona");
-	    btnActualizarPersona.addActionListener(e -> {
-	    	String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID de la que desea actualizar:");
-	    	
-	    	if(idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
-	    		try {
-	    			int id = Integer.parseInt(idSeleccionado.trim());
-	    			Persona personaSeleccionada = personaDAO.verPersonaPorId(id);
-	    			
-	    			if (personaSeleccionada != null) {
-	    				PanelActualizarPersona dialogo = new PanelActualizarPersona(this, personaDAO);
-	    				dialogo.cargarDatosPersona(personaSeleccionada);
-	    				dialogo.setVisible(true);
-	    				cargarPersonas();
-	    			} else {
-	    				JOptionPane.showMessageDialog(this, "Persona no encontrada con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
-	    			}
-    			} catch (NumberFormatException ex){
-    				JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
-    			}
-	    	}
-	    });
+        btnActualizarPersona.addActionListener(e -> actualizarPorId("Persona", personaDAO::verPersonaPorId, persona -> {
+        	PanelActualizarPersona dialogo = new PanelActualizarPersona(this, personaDAO);
+        	dialogo.cargarDatosPersona(persona);
+        	dialogo.setVisible(true);
+        	cargarPersonas();
+        }));
 	    
 	    //Panel para eliminar persona
 	    JButton btnEliminarPersona = new JButton("Eliminar Persona");
-	    btnEliminarPersona.addActionListener(e -> {
-	        String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID de la persona a eliminar:");
-	        if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
-	            try {
-	                int id = Integer.parseInt(idSeleccionado.trim());
-	                Persona personaSeleccionada = personaDAO.verPersonaPorId(id);
-	                if (personaSeleccionada != null) {
-	                    personaDAO.eliminarPersona(id);
-	                } else {
-	                    JOptionPane.showMessageDialog(this, "Persona no encontrada con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
-	                }
-	            } catch (NumberFormatException ex) {
-	                JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
-	            }
-	        }
-	    });
+        btnEliminarPersona.addActionListener(e -> eliminarPorId("Persona", personaDAO::verPersonaPorId, id ->{
+        	personaDAO.eliminarPersona(id);
+        	cargarPersonas();
+	    }));
 	    
 	    JPanel panelAgregarPersona = new JPanel();
 	    panelAgregarPersona.add(btnAgregarPersona);
@@ -307,45 +255,19 @@ public class InterfazBiblioteca extends JFrame {
 	    
 	    // Panel para actualizar préstamo
 	    JButton btnActualizarPrestamo = new JButton("Actualizar Préstamo");
-	    btnActualizarPrestamo.addActionListener(e -> {
-	        String idStr = JOptionPane.showInputDialog(this, "Ingrese el ID del préstamo a actualizar:");
-	        if (idStr != null && !idStr.trim().isEmpty()) {
-	            try {
-	                int id = Integer.parseInt(idStr.trim());
-	                Prestamo prestamo = prestamoDAO.verPrestamoPorId(id);
-	                if (prestamo != null) {
-	                    PanelActualizarPrestamo dialogo = new PanelActualizarPrestamo(this, prestamoDAO);
-	                    dialogo.cargarDatosPrestamo(prestamo);
-	                    dialogo.setVisible(true);
-	                    cargarPrestamos();
-	                } else {
-	                    JOptionPane.showMessageDialog(this, "Préstamo no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
-	                }
-	            } catch (NumberFormatException ex) {
-	                JOptionPane.showMessageDialog(this, "ID inválido.", "Error", JOptionPane.ERROR_MESSAGE);
-	            }
-	        }
-	    });
+        btnActualizarPrestamo.addActionListener(e -> actualizarPorId("Prestamo", prestamoDAO::verPrestamoPorId, prestamo-> {
+        	PanelActualizarPrestamo dialogo = new PanelActualizarPrestamo(this, prestamoDAO);
+        	dialogo.cargarDatosPrestamo(prestamo);
+        	dialogo.setVisible(true);
+        	cargarPrestamos();
+        }));
 	    
 	    //Panel para eliminar préstamo
 	    JButton btnEliminarPrestamo = new JButton("Eliminar Préstamo");
-	    btnEliminarPrestamo.addActionListener(e -> {
-	        String idSeleccionado = JOptionPane.showInputDialog(this, "Ingrese el ID del préstamo a eliminar:");
-	        if (idSeleccionado != null && !idSeleccionado.trim().isEmpty()) {
-	            try {
-	                int id = Integer.parseInt(idSeleccionado.trim());
-	                Prestamo prestamoSeleccionado = prestamoDAO.verPrestamoPorId(id);
-	                if (prestamoSeleccionado != null) {
-	                    prestamoDAO.eliminarPrestamo(id);
-	                    cargarPrestamos(); 
-	                } else {
-	                    JOptionPane.showMessageDialog(this, "Préstamo no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
-	                }
-	            } catch (NumberFormatException ex) {
-	                JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
-	            }
-	        }
-	    });
+        btnEliminarPrestamo.addActionListener(e -> eliminarPorId("Préstamo", prestamoDAO::verPrestamoPorId, id ->{
+        	prestamoDAO.eliminarPrestamo(id);
+        	cargarPrestamos();
+	    }));
 
 	    
 	    JPanel panelBotonesPrestamo = new JPanel();
@@ -460,6 +382,40 @@ public class InterfazBiblioteca extends JFrame {
 	    	}
 	    }
 	    	
+	    private void eliminarPorId(String tipo, Function<Integer, Object> buscador, Consumer<Integer> eliminador) {
+	    	String input = JOptionPane.showInputDialog(this, "Ingrese el ID del " + tipo + " que desea eliminar:");
+	    	if (input != null && !input.trim().isEmpty()) {
+	    		try {
+	    			int id = Integer.parseInt(input.trim());
+	    			Object obj = buscador.apply(id);
+	    			if (obj != null) {
+	    				eliminador.accept(id);	
+	    				JOptionPane.showMessageDialog(this, tipo + " eliminado correctamente");
+    				} else {
+    					JOptionPane.showMessageDialog(this, tipo + " no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
+    				}
+    			} catch (NumberFormatException e) {
+    				JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+    			}
+	    	}
+	    }
+	    
+	    private <T> void actualizarPorId(String tipo, Function<Integer, T> buscador, Consumer<T> actualizador) {
+	    	String input = JOptionPane.showInputDialog(this, "Ingrese el ID del " + tipo + " que desea actualizar:");
+	    	if (input != null && !input.trim().isEmpty()) {
+	    		try {
+	    			int id = Integer.parseInt(input.trim());
+	    			T obj = buscador.apply(id);
+	    			if (obj != null) {
+	    				actualizador.accept(obj);
+	    			} else {
+	    				JOptionPane.showMessageDialog(this, tipo + " no encontrado con ID: " + id, "Error", JOptionPane.ERROR_MESSAGE);
+	    			}
+	    		} catch (NumberFormatException e) {
+	    			JOptionPane.showMessageDialog(this, "ID inválido. Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+	    		}
+	    	}
+	    }
 	    
 	    public static void main(String[] args) {
 	        SwingUtilities.invokeLater(() -> new InterfazBiblioteca().setVisible(true));

@@ -90,22 +90,14 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 		add(panelBotones, BorderLayout.SOUTH);
 	}
 	
-	public void cargarDatosLibro(int id) {
-		Libro libro = libroDAO.verLibroPorId(id);
-		if (libro != null) {
-			txtId.setText(String.valueOf(libro.getId()));
-			txtTitulo.setText(libro.getTitulo());
-			txtAutor.setText(libro.getAutor());
-			txtEditorial.setText(libro.getEditorial());
-			txtImagen.setText(libro.getImagen());
-			
-			String nombreGenero = generoDAO.obtenerNombreGenero(libro.getIdGenero());
-			if (nombreGenero == null) {
-				comboGenero.setSelectedItem(nombreGenero);
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "Libro no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
-		}
+	public void cargarDatosLibro(Libro libro) {
+		txtId.setText(String.valueOf(libro.getId()));
+		txtId.setEditable(false);
+		txtTitulo.setText(libro.getTitulo());
+		txtAutor.setText(libro.getAutor());
+		txtEditorial.setText(libro.getEditorial());
+		comboGenero.setSelectedItem(generoDAO.obtenerNombreGenero(libro.getIdGenero()));
+		txtImagen.setText(libro.getImagen());
 	}
 	
     private void cargarGeneros() {
