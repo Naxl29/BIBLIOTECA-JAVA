@@ -3,14 +3,26 @@ package dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import utils.DBConnection;
+
+import modelo.Genero;
 
 public class GeneroDAOImpl implements GeneroDAO {
 	private Connection con;
 	
 	public GeneroDAOImpl() {
 		this.con = DBConnection.conectar();
+	}
+	
+	@Override
+	public void crearGenero(Genero genero) {
+		String sql = "INSERT INTO generos (genero) VALUES (?)";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, genero.getGenero());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
