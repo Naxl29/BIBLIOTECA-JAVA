@@ -7,14 +7,16 @@ public class Libro {
 	private String editorial;
 	private int id_genero;
 	private String imagen;
+	private int stock;
 	
-	public Libro(int id, String titulo, String autor, String editorial, int id_genero, String imagen) {
+	public Libro(int id, String titulo, String autor, String editorial, int id_genero, String imagen, int stock) {
 		this.id = id;
 		this.titulo = titulo;
 		this.autor = autor;
 		this.editorial = editorial;
 		this.id_genero = id_genero;
 		this.imagen = imagen;
+		this.stock = stock;
 	}
 	
 	public int getId() {
@@ -65,9 +67,18 @@ public class Libro {
 		this.imagen = imagen;
 	}
 	
+	public int getStock() {
+		return stock;
+	}
+	
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
+	
 	@Override
 	public String toString() {
 		return titulo;
 	}
 	
 }
+

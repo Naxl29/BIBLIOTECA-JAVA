@@ -15,13 +15,14 @@ public class LibroDAOImpl implements LibroDAO {
 
     @Override
     public void crearLibro(Libro libro) {
-        String sql = "INSERT INTO libros (titulo, autor, editorial, id_genero, imagen) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO libros (titulo, autor, editorial, id_genero, imagen, stock) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, libro.getTitulo());
             stmt.setString(2, libro.getAutor());
             stmt.setString(3, libro.getEditorial());
             stmt.setInt(4, libro.getIdGenero());
             stmt.setString(5, libro.getImagen());
+            stmt.setInt(6, libro.getStock());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,8 +42,9 @@ public class LibroDAOImpl implements LibroDAO {
                     rs.getString("autor"),
                     rs.getString("editorial"),
                     rs.getInt("id_genero"),
-                    rs.getString("imagen"
-                )));
+                    rs.getString("imagen"),
+                    rs.getInt("stock")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -65,7 +67,8 @@ public class LibroDAOImpl implements LibroDAO {
     				rs.getString("autor"),
     				rs.getString("editorial"),
     				rs.getInt("id_genero"),
-    				rs.getString("imagen")
+    				rs.getString("imagen"),
+    				rs.getInt("stock")
     			);
     		}
     	} catch (SQLException e) {
@@ -76,14 +79,15 @@ public class LibroDAOImpl implements LibroDAO {
 
     @Override
     public void actualizarLibro(Libro libro) {
-        String sql = "UPDATE libros SET titulo = ?, autor = ?, editorial = ?, id_genero = ?, imagen = ? WHERE id = ?";
+        String sql = "UPDATE libros SET titulo = ?, autor = ?, editorial = ?, id_genero = ?, imagen = ?, stock = ? WHERE id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, libro.getTitulo());
             stmt.setString(2, libro.getAutor());
             stmt.setString(3, libro.getEditorial());
             stmt.setInt(4, libro.getIdGenero());
             stmt.setString(5, libro.getImagen());
-            stmt.setInt(6, libro.getId());
+            stmt.setInt(6, libro.getStock());
+            stmt.setInt(7, libro.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -44,7 +44,7 @@ public class InterfazBiblioteca extends JFrame {
         
         // -- PANEL LIBROS --
         JPanel panelTablaLibros = new JPanel(new BorderLayout());
-        modeloTablaLibros = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género", "Imagen"}, 0) {
+        modeloTablaLibros = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género", "Imagen", "stock"}, 0) {
 	        @Override
 	        public Class<?> getColumnClass(int columnIndex) {
 	            return (columnIndex == 5) ? ImageIcon.class : Object.class;
@@ -74,6 +74,7 @@ public class InterfazBiblioteca extends JFrame {
                                 "Título: " + libro.getTitulo() + "\n" +
                                 "Autor: " + libro.getAutor() + "\n" +
                                 "Editorial: " + libro.getEditorial() + "\n" +
+                                "Stock:" + libro.getStock() + "\n" +
                                 "Género: " + nombreGenero
                         );
         				info.setEditable(false); 
@@ -333,7 +334,8 @@ public class InterfazBiblioteca extends JFrame {
 	                libro.getAutor(),
 	                libro.getEditorial(),
 	                nombreGenero != null ? nombreGenero : "Desconocido",
-	                icono
+	                icono,
+	                libro.getStock()
 	    		});
 	    	}
 	    }

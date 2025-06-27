@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `generos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `genero` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `generos` (`id`, `genero`) VALUES
 	(1, 'CIENCIA FICCIÓN'),
@@ -45,23 +45,25 @@ CREATE TABLE IF NOT EXISTS `libros` (
   `editorial` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `id_genero` int NOT NULL,
   `imagen` varchar(255) NOT NULL,
+  `stock` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id_genero` (`id_genero`),
   CONSTRAINT `id_genero` FOREIGN KEY (`id_genero`) REFERENCES `generos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `libros` (`id`, `titulo`, `autor`, `editorial`, `id_genero`, `imagen`) VALUES
-	(10, 'CIEN AÑOS DE SOLEDAD', 'GABRIEL GARCÍA MARQUÉZ', 'EDITORIAL SUDAMERICANA', 8, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\59f5878d-482a-49ac-8d99-cffc38037281.jfif'),
-	(11, '1984', 'GEORGE ORWELL', 'SECKER AND WARBURG', 7, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\George Orwell.jfif'),
-	(12, 'EL SEÑOR DE LOS ANILLOS', 'J.R.R TOLKIEN', 'GEORGE ALLEN', 9, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\el señor de los anillos.jfif'),
-	(13, 'ORGULLO Y PREJUICIO', 'JANE AUSTEN', 'T. EGERTON', 5, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\orgullo y prejuicio.jfif'),
-	(14, 'DON QUIJOTE DE LA MANCHA', 'MIGUEL DE CERVANTES SAAVEDRA', 'FRANCISCO DE ROBLES', 3, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\don quijote.jfif'),
-	(15, 'HARRY POTTER Y LA PIEDRA FILOSOFAL', 'J.K. ROWLING', 'BLOOMSBURY', 3, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\harry potter y la piedra.jfif'),
-	(16, 'LA SOMBRA DEL VIENTO', 'CARLOS RUIZ ZAFÓN', 'PLANETA', 10, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\la sombra del viento.jfif'),
-	(17, 'MATAR UN RUISEÑOR', 'HARPER LEE', 'J.B LIPPINCOTT', 6, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\matar a un ruiseñor.jfif'),
-	(18, 'CRIMEN Y CASTIGO', 'FYODOR DOSTOEVSKY', 'THE RUSSIAN MESSENGER', 2, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\crimen y castigo.jfif'),
-	(19, 'LA CASA DE LOS ESPÍRITUS', 'ISABEL ALLENDE', 'PLAZA & JANÉS', 8, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\la casa de los espiritus.jfif'),
-	(20, 'FAHRENHEIT 451', 'RAY BRADBURY', 'BALLANTINE BOOKS', 1, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\fahrenheit.jfif');
+INSERT INTO `libros` (`id`, `titulo`, `autor`, `editorial`, `id_genero`, `imagen`, `stock`) VALUES
+	(10, 'CIEN AÑOS DE SOLEDAD', 'GABRIEL GARCÍA MARQUÉZ', 'EDITORIAL SUDAMERICANA', 8, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\59f5878d-482a-49ac-8d99-cffc38037281.jfif', 0),
+	(11, '1984', 'GEORGE ORWELL', 'SECKER AND WARBURG', 7, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\George Orwell.jfif', 0),
+	(12, 'EL SEÑOR DE LOS ANILLOS', 'J.R.R TOLKIEN', 'GEORGE ALLEN', 9, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\el señor de los anillos.jfif', 0),
+	(13, 'ORGULLO Y PREJUICIO', 'JANE AUSTEN', 'T. EGERTON', 5, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\orgullo y prejuicio.jfif', 0),
+	(14, 'DON QUIJOTE DE LA MANCHA', 'MIGUEL DE CERVANTES SAAVEDRA', 'FRANCISCO DE ROBLES', 3, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\don quijote.jfif', 0),
+	(15, 'HARRY POTTER Y LA PIEDRA FILOSOFAL', 'J.K. ROWLING', 'BLOOMSBURY', 3, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\harry potter y la piedra.jfif', 0),
+	(16, 'LA SOMBRA DEL VIENTO', 'CARLOS RUIZ ZAFÓN', 'PLANETA', 10, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\la sombra del viento.jfif', 0),
+	(17, 'MATAR UN RUISEÑOR', 'HARPER LEE', 'J.B LIPPINCOTT', 6, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\matar a un ruiseñor.jfif', 0),
+	(18, 'CRIMEN Y CASTIGO', 'FYODOR DOSTOEVSKY', 'THE RUSSIAN MESSENGER', 2, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\crimen y castigo.jfif', 0),
+	(19, 'LA CASA DE LOS ESPÍRITUS', 'ISABEL ALLENDE', 'PLAZA & JANÉS', 8, 'C:\\Users\\HP\\Pictures\\Biblioteca Java\\la casa de los espiritus.jfif', 11),
+	(20, 'Popeye', 'don quijote', 'san jose', 7, 'C:\\Users\\victu\\OneDrive\\Imágenes\\shuerk.jpg', 21),
+	(21, 'Popeye', 'don quijote', 'san jose', 7, 'C:\\Users\\victu\\OneDrive\\Imágenes\\shuerk.jpg', 30);
 
 CREATE TABLE IF NOT EXISTS `personas` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -72,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `personas` (
   `documento` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `Documento` (`documento`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `personas` (`id`, `primer_nombre`, `segundo_nombre`, `primer_apellido`, `segundo_apellido`, `documento`) VALUES
 	(18, 'NICOLÁS', 'ANTONIO', 'ARRIETA', 'LAGOS', '1099735735'),

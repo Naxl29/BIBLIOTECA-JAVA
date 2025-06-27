@@ -71,11 +71,19 @@ public class PrestamoDAOImpl implements PrestamoDAO{
 	
 	@Override
 	public void actualizarPrestamo(Prestamo prestamo) {
-		String sql = "UPDATE prestamos SET id_estado = ? WHERE id = ?";
-		try (PreparedStatement stmt = con.prepareStatement(sql)) {
-			stmt.setInt(1, prestamo.getIdEstado());
-			stmt.setInt(2, prestamo.getId());
-			stmt.executeUpdate();
+		String sqlPrestamo = "UPDATE prestamos SET id_estado = ? WHERE id = ?";
+		String sqlActualizarStock = "UPDATE libros SET stock = stock + 1 WHERE id = ?";
+		try (Connection con = DBConnection.conectar();
+		         PreparedStatement stmtPrestamo = con.prepareStatement(sqlPrestamo);
+		         PreparedStatement stmtStock = con.prepareStatement(sqlActualizarStock)) {
+			// Actualizar el estado del préstamo
+	        stmtPrestamo.setInt(1, prestamo.getIdEstado());
+	        stmtPrestamo.setInt(2, prestamo.getId());
+	        stmtPrestamo.executeUpdate();
+
+	        // Actualizar el stock del libro
+	        stmtStock.setInt(1, prestamo.getIdLibro());
+	        stmtStock.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

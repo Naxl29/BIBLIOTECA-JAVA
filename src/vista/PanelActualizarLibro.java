@@ -23,6 +23,7 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 	private JTextField txtEditorial;
 	private JComboBox<String> comboGenero;
     private JTextField txtImagen;
+    private JTextField txtStock;
     private JButton btnSeleccionarImagen;
 	
 	private JButton btnAceptar;
@@ -40,7 +41,7 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 		setLocationRelativeTo(parent);
 		setLayout(new BorderLayout());
 		
-		JPanel panelFormulario = new JPanel(new GridLayout(6, 2, 5, 5));
+		JPanel panelFormulario = new JPanel(new GridLayout(7, 2, 5, 5));
 		panelFormulario.setBorder(BorderFactory.createTitledBorder("Datos del Libro"));
 		
 		panelFormulario.add(new JLabel("ID:"));
@@ -74,6 +75,10 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
         panelImagen.add(btnSeleccionarImagen, BorderLayout.EAST);
         panelFormulario.add(panelImagen);
 		
+        panelFormulario.add(new JLabel("Stock:"));
+        txtStock = new JTextField();
+        panelFormulario.add(txtStock);
+        
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setActionCommand(ACEPTAR);
 		btnAceptar.addActionListener(this);
@@ -98,6 +103,7 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 		txtEditorial.setText(libro.getEditorial());
 		comboGenero.setSelectedItem(generoDAO.obtenerNombreGenero(libro.getIdGenero()));
 		txtImagen.setText(libro.getImagen());
+		txtStock.setText(String.valueOf(libro.getStock()));
 	}
 	
     private void cargarGeneros() {
@@ -127,10 +133,11 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 				String editorial = txtEditorial.getText().trim();
 				String generoNombre = (String) comboGenero.getSelectedItem();
 				String imagen = txtImagen.getText().trim();
+				int stock = Integer.parseInt(txtStock.getText().trim());
 				
 				int generoId = generoDAO.obtenerIdGenero(generoNombre);
 				
-				Libro libro = new Libro(id, titulo, autor, editorial, generoId, imagen);
+				Libro libro = new Libro(id, titulo, autor, editorial, generoId, imagen, stock);
 				libroDAO.actualizarLibro(libro);
 				
 				JOptionPane.showMessageDialog(this, "Libro actualizado exitosamente.");
