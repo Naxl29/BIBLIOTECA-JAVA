@@ -24,7 +24,6 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 	private JTextField txtEditorial;
 	private JComboBox<String> comboGenero;
 	private JTextField txtImagen;
-	private JTextField txtStock;
 	private JButton btnSeleccionarImagen;
 	
 	private JButton btnAceptar;
@@ -70,10 +69,6 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 		panelImagen.add(txtImagen, BorderLayout.CENTER);
 		panelImagen.add(btnSeleccionarImagen, BorderLayout.EAST);
 		panelFormulario.add(panelImagen);
-		
-		panelFormulario.add(new JLabel("Stock:"));
-		txtStock = new JTextField();
-		panelFormulario.add(txtStock);
 		
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setActionCommand(PanelAgregarLibro.ACEPTAR);
@@ -132,16 +127,15 @@ public class PanelAgregarLibro extends JDialog implements ActionListener {
 				String editorial = txtEditorial.getText().trim();
 				String genero = (String) comboGenero.getSelectedItem();
 				String imagen = txtImagen.getText().trim();
-				int stock = Integer.parseInt(txtStock.getText().trim());
 				
 				int generoId = generoDAO.obtenerIdGenero(genero);
 				
-				if (titulo.isEmpty() || autor.isEmpty() || editorial.isEmpty() || generoId == -1 || imagen.isEmpty() || stock < 0) {
+				if (titulo.isEmpty() || autor.isEmpty() || editorial.isEmpty() || generoId == -1 || imagen.isEmpty()) {
 					JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				
-				Libro libro = new Libro(0, titulo, autor, editorial, generoId, imagen, stock);
+				Libro libro = new Libro(0, titulo, autor, editorial, generoId, imagen);
 				libroDAO.crearLibro(libro);
 				
 				JOptionPane.showMessageDialog(this, "Libro agregado exitosamente.");
