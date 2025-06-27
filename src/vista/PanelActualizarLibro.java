@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import dao.GeneroDAO;
 import dao.GeneroDAOImpl;
@@ -116,8 +118,23 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
         JFileChooser fileChooser = new JFileChooser();
         int resultado = fileChooser.showOpenDialog(this);
         if (resultado == JFileChooser.APPROVE_OPTION) {
-            File archivoSeleccionado = fileChooser.getSelectedFile();
-            txtImagen.setText(archivoSeleccionado.getAbsolutePath());
+            File archivoOriginal = fileChooser.getSelectedFile();
+            String nombreArchivo = archivoOriginal.getName();
+            File carpetaDestino = new File("imagenes");
+            if (!carpetaDestino.exists()) {
+                carpetaDestino.mkdir();
+            }
+            File archivoDestino = new File(carpetaDestino, nombreArchivo);
+            try {
+                Files.copy(
+                    archivoOriginal.toPath(),
+                    archivoDestino.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
+                );
+                txtImagen.setText("imagenes/" + nombreArchivo); // Ruta relativa
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al copiar la imagen: " + ex.getMessage());
+            }
         }
     }
 	
