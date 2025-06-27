@@ -74,10 +74,6 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
         panelImagen.add(txtImagen, BorderLayout.CENTER);
         panelImagen.add(btnSeleccionarImagen, BorderLayout.EAST);
         panelFormulario.add(panelImagen);
-		
-        panelFormulario.add(new JLabel("Stock:"));
-        txtStock = new JTextField();
-        panelFormulario.add(txtStock);
         
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setActionCommand(ACEPTAR);
@@ -103,7 +99,6 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 		txtEditorial.setText(libro.getEditorial());
 		comboGenero.setSelectedItem(generoDAO.obtenerNombreGenero(libro.getIdGenero()));
 		txtImagen.setText(libro.getImagen());
-		txtStock.setText(String.valueOf(libro.getStock()));
 	}
 	
     private void cargarGeneros() {
@@ -137,7 +132,7 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 				
 				int generoId = generoDAO.obtenerIdGenero(generoNombre);
 				
-				Libro libro = new Libro(id, titulo, autor, editorial, generoId, imagen, stock);
+				Libro libro = new Libro(id, titulo, autor, editorial, generoId, imagen);
 				libroDAO.actualizarLibro(libro);
 				
 				JOptionPane.showMessageDialog(this, "Libro actualizado exitosamente.");

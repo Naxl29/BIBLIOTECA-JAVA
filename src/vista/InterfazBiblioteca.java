@@ -70,7 +70,7 @@ public class InterfazBiblioteca extends JFrame {
         tituloLibros.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
         panelTablaLibros.add(tituloLibros, BorderLayout.NORTH);
         
-        modeloTablaLibros = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género", "Imagen", "stock"}, 0) {
+        modeloTablaLibros = new DefaultTableModel(new String[] {"ID", "Título", "Autor", "Editorial", "Género", "Imagen"}, 0) {
 	        @Override
 	        public Class<?> getColumnClass(int columnIndex) {
 	            return (columnIndex == 5) ? ImageIcon.class : Object.class;
@@ -117,7 +117,6 @@ public class InterfazBiblioteca extends JFrame {
                                 "Título: " + libro.getTitulo() + "\n" +
                                 "Autor: " + libro.getAutor() + "\n" +
                                 "Editorial: " + libro.getEditorial() + "\n" +
-                                "Stock:" + libro.getStock() + "\n" +
                                 "Género: " + nombreGenero
                         );
         				info.setEditable(false); 
@@ -502,7 +501,6 @@ public class InterfazBiblioteca extends JFrame {
 	                libro.getEditorial(),
 	                nombreGenero != null ? nombreGenero : "Desconocido",
 	                icono,
-	                libro.getStock()
 	    		});
 	    	}
 	    }
