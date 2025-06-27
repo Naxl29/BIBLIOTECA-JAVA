@@ -100,7 +100,6 @@ public class InterfazBiblioteca extends JFrame {
         tablaLibros.getColumnModel().getColumn(3).setPreferredWidth(130); 
         tablaLibros.getColumnModel().getColumn(4).setPreferredWidth(100); 
         tablaLibros.getColumnModel().getColumn(5).setPreferredWidth(60);  
-        tablaLibros.getColumnModel().getColumn(6).setPreferredWidth(80);  
 
         // Panel para mostrar los detalles de los libros al hacer clic
         tablaLibros.addMouseListener(new MouseAdapter() {

@@ -76,7 +76,7 @@ public class LibroDAOImpl implements LibroDAO {
 
     @Override
     public void actualizarLibro(Libro libro) {
-        String sql = "UPDATE libros SET titulo = ?, autor = ?, editorial = ?, id_genero = ?, imagen = ?, WHERE id = ?";
+        String sql = "UPDATE libros SET titulo = ?, autor = ?, editorial = ?, id_genero = ?, imagen = ? WHERE id = ?";
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, libro.getTitulo());
             stmt.setString(2, libro.getAutor());
