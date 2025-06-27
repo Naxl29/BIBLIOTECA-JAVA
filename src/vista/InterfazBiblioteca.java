@@ -128,11 +128,18 @@ public class InterfazBiblioteca extends JFrame {
         	cargarLibrosOrdenados();
         });
 	    
+        JButton btnAgregarGenero = new JButton("Agregar Género");
+	    btnAgregarGenero.addActionListener(e -> {
+	    	PanelAgregarGenero dialogo = new PanelAgregarGenero(this, generoDAO);
+	    	dialogo.setVisible(true);
+	    });
+	    
 	    JPanel panelAgregarLibro= new JPanel();
 	    panelAgregarLibro.add(btnAgregarLibro);
 	    panelAgregarLibro.add(btnActualizarLibro);
 	    panelAgregarLibro.add(btnEliminarLibro);
 	    panelAgregarLibro.add(btnOrdenarLibros);
+	    panelAgregarLibro.add(btnAgregarGenero);
 	    panelTablaLibros.add(panelAgregarLibro, BorderLayout.SOUTH);
 	    
 	    tabbedPane.addTab("Libros", panelTablaLibros);
@@ -279,6 +286,9 @@ public class InterfazBiblioteca extends JFrame {
 	    tabbedPane.addTab("Préstamos", panelTablaPrestamos);
 	    add(tabbedPane);
 	    
+	    
+	   
+	    
     }
 	    
 	    private void cargarPrestamos() {
@@ -307,7 +317,7 @@ public class InterfazBiblioteca extends JFrame {
 	                tituloLibro,
 	                estadoPrestamo
 	    		});
-	    	}
+	    	}	    	
 	    }
 	    
 	    private void cargarLibros() {
@@ -381,6 +391,8 @@ public class InterfazBiblioteca extends JFrame {
 	    		});
 	    	}
 	    }
+	    
+
 	    	
 	    private void eliminarPorId(String tipo, Function<Integer, Object> buscador, Consumer<Integer> eliminador) {
 	    	String input = JOptionPane.showInputDialog(this, "Ingrese el ID del " + tipo + " que desea eliminar:");
