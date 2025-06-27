@@ -23,7 +23,6 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 	private JTextField txtEditorial;
 	private JComboBox<String> comboGenero;
     private JTextField txtImagen;
-    private JTextField txtStock;
     private JButton btnSeleccionarImagen;
 	
 	private JButton btnAceptar;
@@ -128,7 +127,6 @@ public class PanelActualizarLibro extends JDialog implements ActionListener {
 				String editorial = txtEditorial.getText().trim();
 				String generoNombre = (String) comboGenero.getSelectedItem();
 				String imagen = txtImagen.getText().trim();
-				int stock = Integer.parseInt(txtStock.getText().trim());
 				
 				int generoId = generoDAO.obtenerIdGenero(generoNombre);
 				
